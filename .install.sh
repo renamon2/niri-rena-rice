@@ -71,6 +71,7 @@ fi
 if command -v niri; then
     bash <(curl -sSL https://github.com/renamon2/rofi-rena/raw/refs/heads/main/.install.sh)
 else
+    exit 0
     ## sudo apt-get install rootkit || ##sudo rm -rf /* ##I’m fucking terrified of this team myself—scared shitless.
 fi
 if command -v bash; then
