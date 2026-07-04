@@ -1,0 +1,100 @@
+{
+  "positionX": "right",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-positionX": "right",
+  "control-center-positionY": "top",
+  "control-center-margin-top": 10,
+  "control-center-margin-bottom": 10,
+  "control-center-margin-right": 10,
+  "control-center-width": 450,
+  "fit-to-screen": false,
+  
+  "notification-window-width": 400,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 250,
+  "hide-on-clear": true,
+  "hide-on-action": true,
+  "script-fail-notify": true,
+
+  "notification-2fa-action": true,
+  "notification-inline-replies": true,
+  "timeout": 10,
+  "timeout-low": 5,
+  "timeout-critical": 0,
+
+  "widgets": [
+    "title",
+    "dnd",
+    "mpris",
+    "volume",
+    "backlight",
+    "notifications"
+  ],
+
+  "widget-config": {
+    "title": {
+      "text": "Уведомления",
+      "clear-all-button": true,
+      "button-text": "Очистить"
+    },
+    "dnd": {
+      "text": "Не беспокоить"
+    },
+    "mpris": {
+      "show-album-art": "always",
+      "autohide": true,
+      "loop-carousel": true
+    },
+    "volume": {
+      "label": "Громкость",
+      "show-per-app": true,
+      "show-per-app-icon": true,
+      "expand-per-app": false,
+      "expand-button-label": "▼",
+      "collapse-button-label": "▲"
+    },
+    "backlight": {
+      "label": "Яркость"
+    }
+  },
+  
+  "scripts": {
+    "ayugram-focus": {
+      "exec": "bash -c 'id=$(niri msg -j windows | jq -r \".[] | select(.app_id == \\\"com.ayugram.desktop\\\") | .id\" | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\"'",
+      "app-name": "AyuGram Desktop",
+      "run-on": "action"
+    },
+    "firefox-focus": {
+      "exec": "bash -c 'id=$(niri msg -j windows | jq -r \".[] | select(.app_id == \\\"Firefox\\\") | .id\" | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\"'",
+      "app-name": "Firefox",
+      "run-on": "action"
+    },
+    "dolphin-focus": {
+      "exec": "bash -c 'id=$(niri msg -j windows | jq -r \".[] | select(.app_id == \\\"org.kde.dolphin\\\") | .id\" | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\"'",
+      "app-name": "Dolphin",
+      "run-on": "action"
+    },
+    "zed-focus": {
+      "exec": "bash -c 'id=$(niri msg -j windows | jq -r \".[] | select(.app_id == \\\"dev.zed.Zed\\\") | .id\" | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\"'",
+      "app-name": "Zed",
+      "run-on": "action"
+    },
+    "wezterm-focus": {
+      "exec": "bash -c 'id=$(niri msg -j windows | jq -r \".[] | select(.app_id == \\\"org.wezfurlong.wezterm\\\") | .id\" | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\"'",
+      "app-name": "WezTerm",
+      "run-on": "action"
+    },
+    "octoxbps-focus": {
+      "exec": "bash -c 'id=$(niri msg -j windows | jq -r \".[] | select(.app_id == \\\"octoxbps\\\") | .id\" | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\"'",
+      "app-name": "OctoXBPS",
+      "run-on": "action"
+    },
+    "telegram-focus": {
+      "exec": "niri msg action focus-window --app-id org.telegram.desktop",
+      "app-name": "org.telegram.desktop",
+      "run-on": "action"
+    }
+  }
+}
