@@ -41,3 +41,9 @@ else
     echo "niri help has been extracted."
     echo "niri help has been updated. When you start niri with new settings, then run Super+F1."
 fi
+URL1=https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-0.3_overview.png
+URL2=https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-blurred.png
+DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/niri/wallpaper/awww/"
+mkdir -p $DEST_DIR
+curl -sSL "$URL1" -o "$DEST_DIR/toki_in_space-0.3_overview.png"
+curl -sSL "$URL2" -o "$DEST_DIR/toki_in_space-blurred.png"
