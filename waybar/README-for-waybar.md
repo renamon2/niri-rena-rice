@@ -1,6 +1,6 @@
 ### My recomendations:
 #### AUTO-INSTALL with autobackup
-`curl -sSL https://github.com/renamon2/waybar_rena/raw/refs/heads/main/.install.sh | bash`
+`curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/waybar/.install.sh | bash`
 #### I recommend use with:
  - https://github.com/renamon2/rofi_rena
 #### install:
