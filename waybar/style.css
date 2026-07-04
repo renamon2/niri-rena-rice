@@ -89,10 +89,10 @@ tooltip label {
 
 #clock.module.1,
 #pulseaudio.output {
-    border-radius: 0.5rem 0px 0px 0.5rem;
+    border-radius: 8px 0px 0px 8px;
 }
 
 #clock.module.2 
 #window {
-    border-radius: 0px 0.5rem 0.5rem 0px;
+    border-radius: 0px 8px 0.5px 0px;
 }
