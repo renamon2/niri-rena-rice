@@ -1,5 +1,5 @@
 #### AUTO-INSTALL with auto backup 
-`curl -sSL https://github.com/renamon2/rofi-rena/raw/refs/heads/main/.install.sh | bash`
+`curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/rofi/.install.sh | bash`
 
 | Моя тема для  rofi: Рена   | My theme for rofi: Rena   | Color: Night                    |
 |----------------------------|---------------------------|---------------------------------|
