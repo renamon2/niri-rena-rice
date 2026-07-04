@@ -1,0 +1,308 @@
+/*=======================================================================
+--------------------------------SETTINGS---------------------------------
+=======================================================================*/
+{
+  "layer": "top",
+  "position": "top",
+  
+  "blur": true,
+  "modules-left": [
+    "tray", 
+    "niri/window"
+  ],
+  "modules-center": [
+    "clock#1",
+    "clock#2"
+  ],
+  "modules-right": [
+    "group/audio-drawer",
+    "group/btop-drawer",
+    "backlight",
+    "niri/language",
+    "bluetooth",
+    "network",
+    "group/power",
+  ],
+
+  /*=======================================================================
+  ----------------------------------TRAY-----------------------------------
+  =======================================================================*/
+  "tray": {
+    "icon-size": 25,
+    "spacing": 10,
+    "show-passive-items": true,
+    "reverse-direction": true,
+  },
+  /*=======================================================================
+  ----------------------------------WINDOW---------------------------------
+  =======================================================================*/
+  "niri/window": {
+    "format": "{}",
+    "max-length": 60,
+    "separate-outputs": false,
+  },
+
+  /*=======================================================================
+  --------------------------------DATE AND TIME----------------------------
+  =======================================================================*/
+  "clock#1": {
+    "type": "clock",
+    "format": " {:%H:%M}",
+    "tooltip-format": "{tz_list}",
+    "on-click": "none",
+    "tooltip": true,
+    "timezones": [
+        "",
+        "Europe/Moscow",
+        "Europe/Paris",
+        "America/New_York",
+        "Asia/Tokyo"
+      ],
+      "actions": {
+          "on-scroll-up": "tz_up",
+          "on-scroll-down": "tz_down"
+      }
+  },
+  "clock#2": {
+    "type": "clock",
+    "format": " {0:%d.%m.%Y}",
+    "on-click": "none",
+    "tooltip": true,
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+  },
+  /*=======================================================================
+------------------------------------SOUND--------------------------------
+=======================================================================*/
+  "group/audio-drawer": {
+    "type": "hbox",
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 400,
+      "children-class": "audio-extended",
+      "transition-left-to-right": true,
+    },
+    "modules": ["pulseaudio#output", "pulseaudio#input"],
+  },
+
+  "pulseaudio#output": {
+    "format": "{icon} {volume}%",
+    "format-icons": {
+      "headphone": "󰋋",
+      "default": ["󰕿", "󰖀", "󰕾"],
+    },
+    "format-muted": "󰖁 {volume}%",
+    "on-click": "pavucontrol",
+    "tooltip-format": "Output: {desc}\nЛКМ: pavucontrol",
+  },
+
+  "pulseaudio#input": {
+    "format": "{format_source}",
+    "format-source": " {volume}%",
+    "format-source-muted": " {volume}%",
+    "tooltip-format": "Microphone: {desc}",
+    "tooltip-format-muted": "Muted {desc}",
+    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+    "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
+    "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%",
+    "scroll-step": 1,
+  },
+  /*===========================================================================
+  ------------------------------------BTOP-------------------------------------
+  ===========================================================================*/
+"group/btop-drawer": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "btop-extended",
+      "transition-left-to-right": false,
+    },
+    "modules": [
+      "custom/btop-trigger",
+      "temperature",
+      "memory",
+      "cpu",
+      "battery",
+    ],
+  },
+
+  "custom/btop-trigger": {
+    "format": "btop",
+    "on-click": "kitty -e btop",
+    "tooltip-format": "ЛКМ: btop++",
+  },
+  /*===========================================================================
+  ---------------------------------BATTERY-------------------------------------
+  ===========================================================================*/
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15,
+    },
+    "interval": 30,
+    "format": "{capacity}% {icon}",
+    "format-full": "{capacity}% {icon}",
+    "format-charging": "{capacity}% 󰂄",
+    "format-plugged": "{capacity}% ",
+    "format-alt": "{time} 󱧦",
+    "format-good": "󱈑",
+    "format-full": "full 󱟢",
+    "format-icons": {
+      "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰢞", "󰂊", "󰂅"],
+      "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    },
+  },
+  "battery#bat2": {
+    "bat": "BAT2",
+  },
+
+  /*===========================================================================
+  -----------------------------------CPU---------------------------------------
+  ===========================================================================*/
+  "cpu": {
+      "interval": 2,
+      "states": {
+        "warning": 70,
+        "critical": 90
+      },
+      "format": "{icon} {usage}%",
+      "format-alt": "{avg_frequency} GHz 󰻠",
+      "format-icons": [
+        " ", 
+        " 󰈸", 
+        " 󱗗"
+      ],
+      "tooltip-format": "<tt>Total Usage: {usage}%\nLoad Avg:    {load}\n\nAvg Freq:    {avg_frequency} GHz\nMax Freq:    {max_frequency} GHz\nMin Freq:    {min_frequency} GHz</tt>"
+    },
+  /*===========================================================================
+  -----------------------------------MEMORY------------------------------------
+  ===========================================================================*/
+    "memory": {
+        "interval": 3,
+        "states": {
+          "warning": 80,
+          "critical": 95
+        },
+        "format": " {percentage}%",
+        "format-alt": " {used:.1f}G/{total:.1f}G", 
+        
+        "tooltip-format": "    === RAM ===\nUsage:      {percentage}%\nUsed:       {used:.1f} GiB\nAvailable:  {avail:.1f} GiB\nTotal:      {total:.1f} GiB\n\n   === SWAP ===\nUsage:      {swapPercentage}%\nUsed:       {swapUsed:.1f} GiB\nAvailable:  {swapAvail:.1f} GiB\nTotal:      {swapTotal:.1f} GiB"
+      },
+
+  /*===========================================================================
+  -----------------------------------TEMPERATURE----------------------------------
+  ===========================================================================*/
+    "temperature": {
+        "interval": 2,
+        "critical-threshold": 80,
+        "format": "{icon} {temperatureC}°C",
+        "format-critical": "{icon} {temperatureC}°C ",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip-format": "Celsius:    {temperatureC}°C\nFahrenheit: {temperatureF}°F"
+        },
+
+  /*===========================================================================
+  -----------------------------------BACKLIGHT---------------------------------
+  ===========================================================================*/
+    "backlight": {
+        "scroll-step": 5,
+        "format": "{icon} {percent}%",
+        "format-icons": ["󱩎", "󱩏", "󱩐", "󱩑", "󱩒", "󱩓", "󱩔", "󱩕", "󱩖", "󰛨"],
+        "format-alt": "󰛨 Brightness: {percent}%",
+    },
+
+  /*===========================================================================
+  -----------------------------------LANGUAGE----------------------------------
+  ===========================================================================*/
+  "niri/language": {
+      "format": "󰌌 {}", 
+      "format-en": "EN",
+      "format-us": "US",
+      "format-ru": "RU",
+      "format-uk": "UA",
+      "format-by": "BY",
+      "format-kz": "KZ",
+      "format-de": "DE",
+      "format-fr": "FR",
+      "format-es": "ES",
+      "format-it": "IT",
+      "format-pl": "PL",
+  }, 
+  /*===========================================================================
+  -----------------------------------NETWORK------------------------------------
+  ===========================================================================*/
+  "network": {
+      "interval": 2,
+      "format-wifi": "{icon} {signalStrength}%",
+      "format-ethernet": "󰈁 Wired",
+      "format-disconnected": "󰈂 Disconnected",
+      "format-icons": [
+        "󰤯",
+        "󰤟",
+        "󰤢",
+        "󰤥",
+        "󰤨"
+      ],
+      "tooltip-format-wifi": "=== Wi-Fi Network ===\nSSID:       {essid}\nSignal:     {signalStrength}%\nInterface:  {ifname}\nIP Address: {ipaddr}\n\nTraffic:    ↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}\n\n[L-Click] Network Menu  [M-Click] Wireshark  [R-Click] Zapret",
+      "tooltip-format-ethernet": "=== Ethernet Connection ===\nInterface:  {ifname}\nIP Address: {ipaddr}\n\nTraffic:    ↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}\n\n[L-Click] Network Menu  [M-Click] Wireshark  [R-Click] Zapret",
+      "tooltip-format-disconnected": "=== Network ===\nStatus: Disconnected",
+      "on-click": "kitty -e nmtui",
+      "on-click-middle": "exec wireshark",
+      "on-click-right": "kitty -e zapret"
+    },
+/*===========================================================================
+-----------------------------------POWER-------------------------------------
+===========================================================================*/
+  "group/power": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "btop-extended",
+      "transition-left-to-right": false,
+    },
+    "modules": ["custom/power", "custom/reboot", "custom/quit"],
+  },
+
+  "custom/power": {
+    "format": "󰐥",
+    "on-click": "systemctl poweroff | poweroff",
+    "tooltip": false,
+  },
+
+  "custom/reboot": {
+    "format": " 󰦛 ",
+    "on-click": "systemctl reboot | reboot",
+    "tooltip": false,
+  },
+
+  "custom/quit": {
+    "format": "  ",
+    "on-click": "swaylock",
+    "tooltip": false,
+  },
+  /*===========================================================================
+  -----------------------------------BLUETOOTH---------------------------------
+  ===========================================================================*/
+  "bluetooth": {
+    // Когда блютуз включен, но устройства не подключены
+    "format": "󰂯",
+
+    // Когда блютуз выключен
+    "format-disabled": "󰂲",
+
+    // Когда подключено устройство (покажет иконку "подключен" и имя девайса)
+    "format-connected": "󰂱 {device_alias}",
+
+    // Если у подключенного девайса есть батарейка (например, наушники)
+    "format-connected-battery": "󰂱 {device_alias} 󰥉 {device_battery_percentage}%",
+
+    // Тултипы, чтобы при наведении мыши видеть подробности
+    "tooltip-format": "Контроллер: {controller_alias}\n{num_connections} подключено",
+    "tooltip-format-connected": "Контроллер: {controller_alias}\n\nПодключено:\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "• {device_alias}\t{device_address}",
+    "tooltip-format-enumerate-connected-battery": "• {device_alias}\t{device_address}\t🔋{device_battery_percentage}%",
+
+    // ЛКМ открывает менеджер блютуза
+    "on-click": "blueman-manager",
+  },
+}

@@ -1,0 +1,98 @@
+* {
+    font-family:
+        "DejaVu Sans Mono", "Symbols Nerd Font", "FiraCode Nerd Font",
+        "JetBrainsMono Nerd Font", monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background-color: rgba(24, 34, 46, 0.8); /* Base */
+    border-radius: 0px;
+    color: #70437e;
+}
+
+window > box {
+    min-height: 2.0rem;
+}
+
+#bluetooth,
+#power,
+#custom-quit,
+#custom-reboot,
+#tray,
+#window,
+#clock.module.1,
+#clock.module.2,
+#pulseaudio,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#language,
+#network,
+#custom-btop-trigger,
+#custom-power {
+    padding: 0rem 1.1rem;
+    background-color: rgba(44, 34, 68, 0.75);
+    color: #70437e;
+}
+
+#window:hover 
+#bluetooth:hover,
+#clock.module.2:hover,
+#clock.module.1:hover,
+#window:hover,
+#clock.module.2:hover,
+#custom-quit:hover,
+#custom-reboot:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#pulseaudio.output:hover,
+#temperature:hover,
+#backlight:hover,
+#language:hover,
+#network:hover,
+#custom-power:hover,
+#tray:hover,
+#clock.module.1:hover,
+#clock.module.2:hover,
+#custom-btop-trigger:hover,
+#pulseaudio:hover {
+    border-radius: 0.5rem;
+    background-color: #c372ac ; 
+    color: #373f90;
+}
+
+tooltip {
+    background-color: #18222e;
+    border: 1px solid #373f90;
+    border-radius: 0.5rem;
+    padding: 8px;
+    opacity: 0.8;
+}
+
+tooltip label {
+    color: #373f90;
+    font-family: "DejaVu Sans Mono", "Symbols Nerd Font", monospace;
+}
+
+#battery.critical,
+#temperature.critical {
+    background-color: #c373ac;
+    color: #f3f7f6;
+}
+
+#clock.module.1,
+#pulseaudio.output {
+    border-radius: 0.5rem 0px 0px 0.5rem;
+}
+
+#clock.module.2 
+#window {
+    border-radius: 0px 0.5rem 0.5rem 0px;
+}
