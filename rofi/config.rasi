@@ -1,0 +1,109 @@
+/*=======================================================================
+--------------------------------CONFIG-----------------------------------
+=======================================================================*/
+configuration {
+    modes: [ drun, filebrowser, run ];
+    show-icons: true;
+    drun-display-format: "{name}";
+    disable-history: false;
+    filebrowser {
+        directory: "$HOME";
+        sorting-method: "name";
+    }
+}
+/*=======================================================================
+--------------------------------COLORS-----------------------------------
+=======================================================================*/
+* {
+    font: "DejaVu Sans Mono", "Symbols Nerd Font", "FiraCode Nerd Font", "JetBrainsMono Nerd Font mono 14";
+    text: #373f90ff;
+    subtle: #70437eff;
+    base: #18222ecc;
+    overlay: #2c2244cc;
+    accent: #c372accc;
+    rad: 8px;
+}
+/*=======================================================================
+--------------------------------WINDOW-----------------------------------
+=======================================================================*/
+window {
+    background-color: @base;
+    border:           2px solid;
+    border-color:     @overlay;
+    border-radius:    @rad;
+    width:            700px;
+    padding:          10px;
+    location:         center;
+    anchor:           center;
+}
+mainbox {
+    background-color: transparent;
+    children: [ inputbar, listview ];
+    spacing: 15px;
+}
+/*=======================================================================
+------------------------------INPUTBAR-----------------------------------
+=======================================================================*/
+inputbar {
+    background-color: @border-color-custom;
+    border-radius:    @rad;
+    padding:          10px 10px;
+    children:         [ prompt, entry ];
+    spacing:          10px;
+}
+prompt {
+    background-color: transparent;
+    text-color: @subtle;
+}
+entry {
+    background-color: transparent;
+    placeholder: "Search applications or files...";
+    placeholder-color: @subtle;
+    text-color: @text;
+}
+/*=======================================================================
+------------------------------LISTVIEW-----------------------------------
+=======================================================================*/
+listview {
+    layout:        vertical;
+    lines:         8;
+    columns:       2;
+    spacing:       10px;
+    fixed-height:  true;
+    scrollbar:     false;
+    background-color: transparent;
+}
+/*=======================================================================
+-------------------------------ELEMENT-----------------------------------
+=======================================================================*/
+element {
+    orientation:      horizontal;
+    padding:          10px 10px;
+    border-radius:    @rad;
+    spacing:          10px;
+    cursor:           pointer;
+    background:       #ffccffcc;
+}
+element normal.normal,
+element alternate.normal {
+    background-color: @overlay;
+    text-color:       @subtle;
+}
+element selected.normal {
+    background-color: @accent;
+    text-color:       @text;
+}
+/*=======================================================================
+------------------------------ELEMENT ICON-------------------------------
+=======================================================================*/
+element-icon {
+    size:             36px;
+    background-color: transparent;
+    vertical-align:   0.5;
+}
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    font:             inherit;
+    vertical-align:   0.5;
+}
