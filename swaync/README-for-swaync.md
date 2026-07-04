@@ -1,5 +1,5 @@
 #### AUTO-INSTALL with autobackup
-`curl -sSL https://github.com/renamon2/swaync-rena/raw/refs/heads/main/.install.sh | bash`
+`curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/swaync/.install.sh | bash`
 | Моя тема для  swaync: Рена | My theme for swaync: Rena | Color: Night                    |
 |----------------------------|---------------------------|---------------------------------|
 | Используемые цвета:        | The usage color:          |     HTML               RGB      |
