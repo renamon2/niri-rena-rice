@@ -29,7 +29,7 @@ ask_yes_no() {
 }
 
 URL="https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish"
-
+DIST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish"
 
 if command -v fish >/dev/null 2>&1; then
     echo "fish shell is already installed."
@@ -40,7 +40,6 @@ if command -v fish >/dev/null 2>&1; then
             echo "Installing plugins..."
             fish -c "fisher install IlanCosman/tide"
             echo "Plugins installed. Starting configuration..."
-            # Запускаем интерактивный мастер настройки tide
             fish -c "tide configure"
         fi
     else
@@ -53,7 +52,6 @@ if command -v fish >/dev/null 2>&1; then
                 echo "Installing plugins..."
                 fish -c "fisher install IlanCosman/tide"
                 echo "Plugins installed. Starting configuration..."
-                # Запускаем интерактивный мастер настройки tide
                 fish -c "tide configure"
             fi
         else
@@ -80,7 +78,6 @@ else
                 echo "Installing plugins..."
                 fish -c "fisher install IlanCosman/tide"
                 echo "Plugins installed. Starting configuration..."
-                # Запускаем интерактивный мастер настройки tide
                 fish -c "tide configure"
             else
                 echo "As you wish."
@@ -94,3 +91,39 @@ else
 fi
 
 echo "Script completed successfully!"
+
+if [ -f "$DIST_DIR/config.fish" ]; then
+    echo "Configuration file found. Skipping configuration."
+    echo "Configuration file: $DIST_DIR/config.fish"
+else
+    echo "No configuration file found. Creating default configuration..."
+    touch "$DIST_DIR/config.fish"
+    echo "Configuration file created."
+fi
+cat <<EOF > "$DIST_DIR/config.fish"
+if status is-interactive
+    # Commands to run in interactive sessions can go here
+end
+
+set -g fish_greeting "!ты в терминале fish-shell!"
+
+set -gx EDITOR zed
+set -gx TERMINAL kitty
+
+abbr -a cl clear
+abbr -a upd "sudo xbps-install -Suy"
+abbr -a "pacman-S" "sudo xbps-install -S"
+abbr -a "pacman-R" "sudo xbps-remove -R"
+abbr -a "reboot" "sudo reboot"
+if status --is-login
+    if test -S /run/seatd.sock
+        set -gx LIBSEAT_BACKEND seatd
+    elif test -d /run/elogind
+        set -gx LIBSEAT_BACKEND elogind
+    elif test -S /run/dbus/system_bus_socket
+        set -gx LIBSEAT_BACKEND elogind
+    else
+        set -e LIBSEAT_BACKEND
+    end
+end
+EOF
