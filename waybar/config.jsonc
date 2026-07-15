@@ -145,7 +145,7 @@
     "format-charging": "{capacity}% 󰂄",
     "format-plugged": "{capacity}% ",
     "format-alt": "{time} 󱧦",
-    "format-good": "󱈑",
+    // "format-good": "󱈑",
     "format-full": "full 󱟢",
     "format-icons": {
       "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰢞", "󰂊", "󰂅"],
@@ -168,9 +168,9 @@
       "format": "{icon} {usage}%",
       "format-alt": "{avg_frequency} GHz 󰻠",
       "format-icons": [
-        " ", 
-        " 󰈸", 
-        " 󱗗"
+        "", 
+        "󰈸", 
+        "󱗗"
       ],
       "tooltip-format": "<tt>Total Usage: {usage}%\nLoad Avg:    {load}\n\nAvg Freq:    {avg_frequency} GHz\nMax Freq:    {max_frequency} GHz\nMin Freq:    {min_frequency} GHz</tt>"
     },
@@ -265,13 +265,13 @@
 
   "custom/power": {
     "format": "󰐥",
-    "on-click": "systemctl poweroff | poweroff",
+    "on-click": "poweroff",
     "tooltip": false,
   },
 
   "custom/reboot": {
     "format": " 󰦛 ",
-    "on-click": "systemctl reboot | reboot",
+    "on-click": "reboot",
     "tooltip": false,
   },
 

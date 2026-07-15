@@ -92,7 +92,8 @@ tooltip label {
     border-radius: 8px 0px 0px 8px;
 }
 
-#clock.module.2 
+
+#clock.module.2,
 #window {
-    border-radius: 0px 8px 0.5px 0px;
+    border-radius: 0rem 0.5rem 0.5rem 0rem;
 }
