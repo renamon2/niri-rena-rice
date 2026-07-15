@@ -249,10 +249,6 @@ overview {
     spawn-sh-at-startup "awww-daemon -n blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur >/dev/null 2>&1"
 //  Notifications
 	spawn-sh-at-startup "swaync >/dev/null 2>&1"
-// Messenger
-    // spawn-sh-at-startup "*"
-// VPN
-    // spawn-sh-at-startup "*"
 /*=======================================================================
 ----------------------------------another--------------------------------
 =======================================================================*/
@@ -327,7 +323,7 @@ window-rule {
     opacity 1.0
     tiled-state true
 }
-                               /* ТЕЛЕГРАМ */
+                               /* TELEGRAM */
 window-rule {
     match app-id=r#"^org.telegram.desktop$"#
     border {
@@ -400,7 +396,7 @@ window-rule {
         saturation 3
     }
 }
-                                  /* ФАЙРФОКС */
+                                  /* FIREFOX */
 //firefox
 window-rule {
     match app-id=r#"^Firefox$"#
