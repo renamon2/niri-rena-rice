@@ -10,7 +10,7 @@ else
     echo "$DEST_DIR directory created."
 fi
 
-if [ -d "$DEST_DIR" ] && niri &> /dev/null; then
+if [ -d "$DEST_DIR" ] && command -v niri >/dev/null 2>&1; then
     curl -sSL "$URL" -o "$DEST_DIR/config.kdl"
     echo "$CFG has been installed."
 else
