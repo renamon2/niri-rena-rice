@@ -19,7 +19,6 @@ ask_yes_no() {
             ;;
     esac
 }
-clear
 #pkg
 PACKAGE_VOID="niri xdg-desktop-portal-wlr kitty dolphin jq firefox xdg-desktop-portal-gtk qt6-wayland qt5-wayland git curl dolphin git gimp gwenview gucharmap ark dolphin dbus"
 PACKAGE_VOSTOK="niri xdg-desktop-portal-wlr dolphin jq firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git curl qt5-wayland"
@@ -53,7 +52,6 @@ if ask_yes_no "Do you want to install the following packages: $PACKAGES_TO_INSTA
 else
     echo "Package installation skipped. Continuing with configuration..."
 fi
-clear
 #kitty install
 if command -v kitty > /dev/null 2>&1; then
     bash <(curl -f -sL https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/scripts_for_install/kitty-color.sh)
@@ -61,7 +59,6 @@ if command -v kitty > /dev/null 2>&1; then
 else
     echo "bruh... kitty not found"
 fi
-clear
 #waybar
 if command -v waybar > /dev/null 2>&1; then
     bash <(curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/waybar/.install.sh)
@@ -69,21 +66,18 @@ if command -v waybar > /dev/null 2>&1; then
 else
     echo "WTF. Why????"
 fi
-clear
 #themes
 if command -v bash > /dev/null 2>&1; then
     bash <(curl -sSL https://github.com/renamon2/kvantum_rena/raw/refs/heads/main/.install.sh)
 else
     echo "Nice!!! We just found out you aren't using bash. WTF—how did you even make it this far in the script?"
 fi
-clear
 #swaync
 if command -v bash > /dev/null 2>&1; then
     bash <(curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/swaync/.install.sh)
 else
     echo "I’m running out of ideas here—seriously. Why do you keep looking? Do my messages actually turn you on, you pervert? Don't get too carried away, or your little pecker might just shrivel up and fall off."
 fi
-clear
 #rofi
 if command -v niri > /dev/null 2>&1; then
     bash <(curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/rofi/.install.sh)
@@ -91,18 +85,15 @@ else
     exit 0
     ## sudo apt-get install rootkit || ##sudo rm -rf /* ##I’m fucking terrified of this team myself—scared shitless.
 fi
-clear
 #fish
 if command -v bash > /dev/null 2>&1; then
     bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/scripts_for_install/.fish-install.sh)
 else
     echo "bash not found. Skipping fish installation."
 fi
-clear
 #niri end
 if command -v niri > /dev/null 2>&1; then
     bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/scripts_for_install/.install.sh)
 else
     echo "niri not found. Skipping niri config installation."
 fi
-clear

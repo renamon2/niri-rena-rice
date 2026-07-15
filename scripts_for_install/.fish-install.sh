@@ -33,73 +33,35 @@ DIST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish"
 
 if command -v fish >/dev/null 2>&1; then
     echo "fish shell is already installed."
-    
-    if command -v fisher >/dev/null 2>&1; then
-        echo "Fisher is already installed."
-        if ask_yes_no "Do you want to install tide (prompt theme)?"; then
-            echo "Installing plugins..."
-            fish -c "fisher install IlanCosman/tide"
-            echo "Plugins installed. Starting configuration..."
-            fish -c "tide configure"
-        fi
-    else
-        if ask_yes_no "Fisher is not installed. Do you want to install it?"; then
-            echo "Installing fisher..."
-            fish -c "curl -sL $URL | source && fisher install jorgebucaran/fisher"
-            echo "Fisher installed."
-            
-            if ask_yes_no "Do you want to install tide (prompt theme)?"; then
-                echo "Installing plugins..."
-                fish -c "fisher install IlanCosman/tide"
-                echo "Plugins installed. Starting configuration..."
-                fish -c "tide configure"
-            fi
-        else
-            echo "As you wish."
-        fi
-    fi
-
 else
-    if ask_yes_no "You want to install fish shell?"; then
-        echo "Installing fish shell..."
-        sudo $PKG_MANAGER -Sy fish
-        echo "fish shell installed."
-        
-        echo "Setting fish as the default shell..."
-        chsh -s /usr/bin/fish
-        echo "Default shell set to fish."
-        
-        if ask_yes_no "Do you want to install fisher?"; then
-            echo "Installing fisher..."
-            fish -c "curl -sL $URL | source && fisher install jorgebucaran/fisher"
-            echo "Fisher installed."
-            
-            if ask_yes_no "Do you want to install tide (prompt theme)?"; then
-                echo "Installing plugins..."
-                fish -c "fisher install IlanCosman/tide"
-                echo "Plugins installed. Starting configuration..."
-                fish -c "tide configure"
-            else
-                echo "As you wish."
-            fi
-        else
-            echo "As you wish."
-        fi
-    else
-        echo "As you wish."
-    fi
+    echo "Installing fish shell..."
+    sudo "$PKG_MANAGER" -Sy fish
+    echo "fish shell installed."
 fi
-
-echo "Script completed successfully!"
-
-if [ -f "$DIST_DIR/config.fish" ]; then
-    echo "Configuration file found. Skipping configuration."
-    echo "Configuration file: $DIST_DIR/config.fish"
-else
-    echo "No configuration file found. Creating default configuration..."
+#проверка существования директории шелла фиш
+if [ ! -d "$DIST_DIR" ]; then
+    mkdir -p "$DIST_DIR"
+    echo "Created fish config directory: $DIST_DIR"
     touch "$DIST_DIR/config.fish"
-    echo "Configuration file created."
+    echo "Created fish config file: $DIST_DIR/config.fish"
 fi
+
+if [ ! -f "$DIST_DIR/config.fish" ]; then
+    echo "Fish config file does not exist: $DIST_DIR/config.fish"
+    touch "$DIST_DIR/config.fish"
+    echo "Created fish config file: $DIST_DIR/config.fish"
+else
+    echo "backup: $DIST_DIR/config.fish"
+    mv "$DIST_DIR/config.fish" "$DIST_DIR/config.fish.bak"
+    echo "backup created: $DIST_DIR/config.fish.bak"
+    touch "$DIST_DIR/config.fish"
+    echo "created: $DIST_DIR/config.fish"
+fi
+
+echo "Installing fisher..."
+fish -c "curl -sL $URL | source && fisher install jorgebucaran/fisher"
+echo "Fisher installed successfully."
+
 cat <<EOF > "$DIST_DIR/config.fish"
 if status is-interactive
     # Commands to run in interactive sessions can go here
@@ -110,6 +72,7 @@ set -g fish_greeting "!ты в терминале fish-shell!"
 set -gx EDITOR zed
 set -gx TERMINAL kitty
 
+abbr -a fetch fastfetch
 abbr -a cl clear
 abbr -a upd "sudo xbps-install -Suy"
 abbr -a "pacman-S" "sudo xbps-install -S"
@@ -117,7 +80,6 @@ abbr -a "pacman-R" "sudo xbps-remove -R"
 abbr -a "reboot" "sudo reboot"
 abbr -a "off" "sudo shutdown -h now"
 abbr -a "msg" "niri msg"
-abbr -a "niri" "niri --session"
 if status --is-login
     if test -S /run/seatd.sock
         set -gx LIBSEAT_BACKEND seatd
