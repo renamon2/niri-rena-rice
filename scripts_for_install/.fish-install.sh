@@ -115,6 +115,9 @@ abbr -a upd "sudo xbps-install -Suy"
 abbr -a "pacman-S" "sudo xbps-install -S"
 abbr -a "pacman-R" "sudo xbps-remove -R"
 abbr -a "reboot" "sudo reboot"
+abbr -a "off" "sudo shutdown -h now"
+abbr -a "msg" "niri msg"
+abbr -a "niri" "niri --session"
 if status --is-login
     if test -S /run/seatd.sock
         set -gx LIBSEAT_BACKEND seatd
