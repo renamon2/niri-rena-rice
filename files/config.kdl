@@ -548,7 +548,7 @@ layer-rule {
     place-within-backdrop true
 }
 layer-rule {
-    match namespace="^rofi"
+    match namespace="^rofi$"
     background-effect {
         xray true
         blur true
