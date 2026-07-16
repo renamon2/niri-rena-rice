@@ -560,7 +560,7 @@ layer-rule {
 ----------------------------Hotkey Bindkeys------------------------------
 =======================================================================*/
 binds {
-    Mod+F1 { spawn-sh "firefox --new-window /home/$USER/.config/niri/help.html"; }
+    Mod+F1 { spawn-sh "firefox --new-window /home/$USER/.config/niri/help/help.html"; }
     Mod+T { spawn "kitty"; }
     Mod+D { spawn-sh "rofi -show drun || pkill rofi"; }
     Mod+P { spawn "swaylock"; }
