@@ -57,7 +57,7 @@ echo "niri wallpapers have been installed."
 
 # Добавляем niri-rice.desktop, если systemctl не найден
 # EN: Add niri-rice.desktop, if systemctl is not found
-DEST_DIR="${XDG_DATA_DIRS:-/usr/local/share:/usr/share}/wayland-sessions/"
+DEST_DIR="/usr/share/wayland-sessions"
 if command -v systemctl --version &>/dev/null; then
     echo "systemctl found. Skipping niri-rice.desktop creation for runit."
 else
