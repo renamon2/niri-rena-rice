@@ -68,7 +68,7 @@ else
 [Desktop Entry]
 Name=Niri (Rice)
 Comment=A scrollable-tiling Wayland compositor
-Exec=$HOME/.config/niri/niri-wrapper.sh
+Exec=niri
 Type=Application
 DesktopNames=rice-niri
 EOF
