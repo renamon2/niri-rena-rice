@@ -55,20 +55,20 @@ fi
 #kitty install
 if command -v kitty > /dev/null 2>&1; then
     bash <(curl -f -sL https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/scripts_for_install/kitty-color.sh)
-    echo "Kitty color scheme installed. From https://github.com/ttys3/oh-my-kitty and used my theme."
+    echo "Kitty color scheme installed. From https://raw.githubusercontent.com/ttys3/oh-my-kitty and used my theme."
 else
     echo "bruh... kitty not found"
 fi
 #waybar
 if command -v waybar > /dev/null 2>&1; then
-    bash <(curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/waybar/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/raw/refs/heads/main/waybar/.install.sh)
     echo "Waybar installed and configured. Not truth"
 else
     echo "WTF. Why????"
 fi
 #themes
 if command -v bash > /dev/null 2>&1; then
-    bash <(curl -sSL https://github.com/renamon2/kvantum_rena/raw/refs/heads/main/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum_rena/raw/refs/heads/main/.install.sh)
 else
     echo "Nice!!! We just found out you aren't using bash. WTF—how did you even make it this far in the script?"
 fi
@@ -80,7 +80,7 @@ else
 fi
 #rofi
 if command -v niri > /dev/null 2>&1; then
-    bash <(curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/rofi/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/raw/refs/heads/main/rofi/.install.sh)
 else
     exit 0
     ## sudo apt-get install rootkit || ##sudo rm -rf /* ##I’m fucking terrified of this team myself—scared shitless.
