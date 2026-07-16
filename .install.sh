@@ -68,7 +68,7 @@ else
 fi
 #themes
 if command -v bash > /dev/null 2>&1; then
-    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum_rena/refs/heads/main/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh)
 else
     echo "Nice!!! We just found out you aren't using bash. WTF—how did you even make it this far in the script?"
 fi
