@@ -74,7 +74,7 @@ else
 fi
 #swaync
 if command -v bash > /dev/null 2>&1; then
-    bash <(curl -sSL https://github.com/renamon2/niri-rena-rice/raw/refs/heads/main/swaync/.install.sh)
+    bash <(curl -sSL "https://raw.githubusercontent.com/renamon2/niri-rena-rice/main/swaync/.install.sh")
 else
     echo "I’m running out of ideas here—seriously. Why do you keep looking? Do my messages actually turn you on, you pervert? Don't get too carried away, or your little pecker might just shrivel up and fall off."
 fi
