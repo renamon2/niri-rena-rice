@@ -92,3 +92,4 @@ if status --is-login
     end
 end
 EOF
+echo "Конфигурация Fish успешно записана! Установка завершена."
