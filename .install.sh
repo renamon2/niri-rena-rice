@@ -98,3 +98,4 @@ else
     echo "niri not found. Skipping niri config installation."
 fi
 clear
+exit 0
