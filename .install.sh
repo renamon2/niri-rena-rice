@@ -61,26 +61,26 @@ else
 fi
 #waybar
 if command -v waybar > /dev/null 2>&1; then
-    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/raw/refs/heads/main/waybar/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/waybar/.install.sh)
     echo "Waybar installed and configured. Not truth"
 else
     echo "WTF. Why????"
 fi
 #themes
 if command -v bash > /dev/null 2>&1; then
-    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum_rena/raw/refs/heads/main/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum_rena/refs/heads/main/.install.sh)
 else
     echo "Nice!!! We just found out you aren't using bash. WTF—how did you even make it this far in the script?"
 fi
 #swaync
 if command -v bash > /dev/null 2>&1; then
-    bash <(curl -sSL "https://raw.githubusercontent.com/renamon2/niri-rena-rice/main/swaync/.install.sh")
+    bash <(curl -sSL "https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/swaync/.install.sh")
 else
     echo "I’m running out of ideas here—seriously. Why do you keep looking? Do my messages actually turn you on, you pervert? Don't get too carried away, or your little pecker might just shrivel up and fall off."
 fi
 #rofi
 if command -v niri > /dev/null 2>&1; then
-    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/raw/refs/heads/main/rofi/.install.sh)
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/rofi/.install.sh)
 else
     exit 0
     ## sudo apt-get install rootkit || ##sudo rm -rf /* ##I’m fucking terrified of this team myself—scared shitless.
