@@ -35,7 +35,7 @@ if command -v fish >/dev/null 2>&1; then
     echo "fish shell is already installed."
 else
     echo "Installing fish shell..."
-    sudo "$PKG_MANAGER" -Sy fish
+    sudo "$PKG_MANAGER" -Sy fish-shell
     echo "fish shell installed."
 fi
 #проверка существования директории шелла фиш
