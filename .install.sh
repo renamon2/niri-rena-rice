@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # ask
 ask_yes_no() {
     read -t 5 -p "$1 (Y/n) [Auto-yes in 5s]: " yn < /dev/tty
@@ -21,25 +20,12 @@ ask_yes_no() {
     esac
 }
 
-# pkg
-PACKAGE_VOID="niri xdg-desktop-portal-wlr kitty dolphin jq firefox xdg-desktop-portal-gtk qt6-wayland qt5-wayland git curl gimp gwenview gucharmap ark dbus waybar fish swaync rofi"
-PACKAGE_VOSTOK="niri xdg-desktop-portal-wlr dolphin jq firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git curl qt5-wayland kitty Waybar fish-shell SwayNotificationCenter rofi"
-
 # pkg mng
-if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
-    # vostok
+if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
+    PACKAGE="niri xdg-desktop-portal-wlr dolphin jq firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git curl qt5-wayland kitty Waybar fish-shell SwayNotificationCenter rofi"
     PKG_MANAGER="xbps-install -Suy"
-    PACKAGES_TO_INSTALL=$PACKAGE_VOSTOK
-    echo "vostok linux repo found"
-elif command -v xbps-install >/dev/null 2>&1; then
-    # void
-    PKG_MANAGER="xbps-install"
     PACKAGES_TO_INSTALL=$PACKAGE_VOID
-    echo "void found"
-else
-    # exit 1
-    echo "Rice for Void linux"
-    exit 1
+    echo "vostok linux repo found"
 fi
 
 if command -v niri > /dev/null 2>&1; then
