@@ -86,7 +86,7 @@ EOF
     curl -L -o "$DEST_DIR/style.css" "$REPO2_URL"
     echo "Waybar configured"
 ### THEMES ###
-    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh)
+    curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh
     echo "qt and gtk is configured"
 ### NOTIFICATION (SWAYNC) ###
     DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
