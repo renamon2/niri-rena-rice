@@ -1,7 +1,7 @@
 #!/bin/bash
 #ask
 ask_yes_no() {
-    read -t 5 -p "$1 (Y/n) [Auto-yes in 5s]: " yn
+    read -t 5 -p "$1 (Y/n) [Auto-yes in 5s]: " yn < /dev/tty
     if [ -z "$yn" ]; then
         echo -e "\nTimeout or Enter pressed! Defaulting to: YES"
         return 0
