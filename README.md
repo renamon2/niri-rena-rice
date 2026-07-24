@@ -1,4 +1,4 @@
-`bash (curl -Ssl https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/.install.sh | psub)`
+`bash <(curl -Ssl https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/.install.sh)`
 | Моя тема для  waybar: Рена | My theme for waybar: Rena | Color: Night                    |
 |----------------------------|---------------------------|---------------------------------|
 | Используемы цвета:         | The usage color:          |     HTML               RGB      |
