@@ -21,7 +21,7 @@ ask_yes_no() {
 }
 #pkg
 PACKAGE_VOID="niri xdg-desktop-portal-wlr kitty dolphin jq firefox xdg-desktop-portal-gtk qt6-wayland qt5-wayland git curl dolphin git gimp gwenview gucharmap ark dolphin dbus"
-PACKAGE_VOSTOK="niri xdg-desktop-portal-wlr dolphin jq firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git curl qt5-wayland"
+PACKAGE_VOSTOK="niri xdg-desktop-portal-wlr dolphin jq firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git curl qt5-wayland kitty waybar"
 #pkg mng
 if grep -q "repository=https://repo.vostoklinux.org/current" /etc/xbps.d/*.conf 2>/dev/null; then
     #vostok
