@@ -28,7 +28,7 @@ PACKAGE_VOSTOK="niri xdg-desktop-portal-wlr dolphin jq firefox octoxbps zed gwen
 # pkg mng
 if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
     # vostok
-    PKG_MANAGER="xbps-install"
+    PKG_MANAGER="xbps-install -Suy"
     PACKAGES_TO_INSTALL=$PACKAGE_VOSTOK
     read -r -p $'Hi there, comrade!\nI noticed you using Vostok Linux \nso be proud—not only are you using a Russian distribution,\nbut you\'ve also got a custom setup.\nIn any case, consider this a pre-installation warning; after all,\nwho knows? I might just be trying to slip a rootkit onto your system via `sudo`.\nRegardless, the Vostok distribution is supported.\nI recommend installing it for a new user first to test it out.\n[Press Enter to continue]' dummy
 
