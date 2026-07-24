@@ -97,5 +97,4 @@ if command -v niri > /dev/null 2>&1; then
 else
     echo "niri not found. Skipping niri config installation."
 fi
-clear
 exit 0
