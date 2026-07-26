@@ -1133,20 +1133,16 @@ animations {
 -----------------------------Window Rules--------------------------------
 =======================================================================*/
 window-rule {
-    opacity 0.95
-}
+    opacity 0.95}
 window-rule {
     geometry-corner-radius 8
-    clip-to-geometry true
-}
+    clip-to-geometry true}
 window-rule {
     match is-floating=true
     border {
         width 1
         active-color "#c372ac"
-        inactive-color "#18222e"
-    }
-}
+        inactive-color "#18222e"}}
 window-rule {
     match app-id=r#"^org.pulseaudio.pavucontrol$"#
     match app-id=r#"^gimp$"# title="^Запуск GIMP$"
@@ -1160,23 +1156,19 @@ window-rule {
     match app-id=r#"^gucharmap$"#
     match app-id=r#"^qt-sudo$"#
     open-floating true
-    opacity 1.0
-}
+    opacity 1.0}
 window-rule {
     match app-id=r#"^gimp$"# title="GNU Image Manipulation Program"
     open-maximized-to-edges true
     opacity 1.0
-    tiled-state true
-}
+    tiled-state true}
 window-rule {
     match app-id=r#"^org.telegram.desktop$"#
     match app-id=r#"^com.ayugram.desktop$"#
     opacity 0.95
-    border {
-        off
-    }
     block-out-from "screen-capture"
-}
+    border {
+        off}}
 window-rule {
     match app-id=r#"^org.kde.dolphin$"#
     opacity 0.975
@@ -1288,8 +1280,6 @@ binds {
     XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
     XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    Mod+C           { center-column; }
-    Mod+Alt+C       { center-visible-columns; }
     Mod+Shift+R { switch-preset-column-width-back; }
     Mod+Alt+Shift+R { switch-preset-window-height; }
     Mod+Alt+R { reset-window-height; }
