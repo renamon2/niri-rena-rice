@@ -1079,12 +1079,13 @@ overview {
 /*=======================================================================
 ------------------------------auto-startup-------------------------------
 =======================================================================*/
-	spawn-at-startup "pipewire"
-	spawn-at-startup "wireplumber"
-	spawn-at-startup "waybar"
+    spawn-at-startup "dbus-update-activation-environment" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP=niri"
+    spawn-at-startup "pipewire"
+    spawn-at-startup "wireplumber"
+    spawn-at-startup "waybar"
     spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png"
     spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur"
-	spawn-at-startup "swaync"
+    spawn-at-startup "swaync"
 /*=======================================================================
 ----------------------------------another--------------------------------
 =======================================================================*/
