@@ -487,8 +487,12 @@ EOF
 echo "style.css created"
 echo "Waybar configured"
 ### THEMES ###
-bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh)
-echo "qt and gtk is configured"
+if ask_yes_no "Do you want to install Kvantum themes?"; then
+    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh)
+    echo "qt and gtk is configured"
+else
+    echo "Skipping Kvantum themes installation."
+fi
 ### NOTIFICATION (SWAYNC) ###
 # VARIABLES
 DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
