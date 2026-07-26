@@ -33,7 +33,7 @@ REQUIRED_APPS=(
     "font-firacode" "curl" "qt5-wayland" "kitty" "Waybar"
     "fish" "SwayNotificationCenter" "rofi"
 )
-MISSING_APPS=($(type -p "${REQUIRED_APPS[@]}" 2>&1 | awk '/not found|/ {print $NF}' | tr -d "«»'\"`"))
+MISSING_APPS=($(type -p "${REQUIRED_APPS[@]}" 2>&1 | awk '/not found/ {print $NF}' | tr -d "«»'\"\`"))
 # PACKAGE MANAGER
 if [ ${#MISSING_APPS[@]} -gt 0 ]; then
     echo "⚠️ Обнаружены отсутствующие пакеты: ${MISSING_APPS[*]}"
