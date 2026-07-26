@@ -39,7 +39,7 @@ for app in "${REQUIRED_APPS[@]}"; do
 done
 # PACKAGE MANAGER
 if [ ${#MISSING_APPS[@]} -gt 0 ]; then
-    echo "⚠️ Обнаружены отсутствующие пакеты: ${MISSING_APPS[*]}"
+    echo "Found missing packages: ${MISSING_APPS[*]}"
     if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
         echo "vostok linux repo found"
         sudo xbps-install -Suy "${MISSING_APPS[@]}"
