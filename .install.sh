@@ -795,9 +795,11 @@ DIST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish"
 mkdir -p "$DIST_DIR"
 echo "make directory $DIST_DIR"
 # INSTALL FISHER
-echo "Installing fisher..."
-fish -c "curl -sL $URL | source && fisher install jorgebucaran/fisher"
-echo "Fisher installed successfully."
+if [ ! -a "$DIST_DIR/completions/fisher.fish" ]; then
+    echo "Installing fisher..."
+    fish -c "curl -sL $URL | source && fisher install jorgebucaran/fisher"
+    echo "Fisher installed successfully."
+fi
 # CONFIGURE FISH
 touch "$DIST_DIR/config.fish"
 cat << 'EOF' > "$DIST_DIR/config.fish"
@@ -1340,9 +1342,12 @@ echo "niri is configured"
 DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xdg-desktop-portal"
 mkdir -p "$DEST_DIR"
 touch "$DEST_DIR/portals.conf"
+echo "$DEST_DIR created"
+echo "$DEST_DIR/portals.conf created"
 cat << 'EOF' > "$DEST_DIR/portals.conf"
 [preferred]
 default=wlr
 EOF
+echo "xdg-desktop-portal configured"
 
 exit 0
