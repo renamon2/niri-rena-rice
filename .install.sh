@@ -487,7 +487,7 @@ EOF
 echo "style.css created"
 echo "Waybar configured"
 ### THEMES ###
-curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh
+bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh)
 echo "qt and gtk is configured"
 ### NOTIFICATION (SWAYNC) ###
 # VARIABLES
