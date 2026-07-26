@@ -26,7 +26,7 @@ else
     BACKUP=no
 fi
 REQUIRED_APPS=(
-    "niri" "btop" "xdg-desktop-portal-wlr" "awww" "dolphin" "jq"
+    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq"
     "wireshark-qt" "firefox" "octoxbps" "zed" "gwenview" "ark"
     "gucharmap" "xdg-desktop-portal-gtk" "qt6-wayland" "git"
     "NetworkManager" "pavucontrol" "nerd-fonts-symbols-ttf"
