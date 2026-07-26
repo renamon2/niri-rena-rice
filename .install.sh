@@ -859,22 +859,18 @@ environment {
     QT_COLOR_SCHEME "dark"
     QT_STYLE_OVERRIDE "kvantum"
     QT_CURSORS_SIZE "24"
-    XCURSOR_PATH "/home/user/.local/share/icons"
-    XCURSOR_THEME "Kitty_Cursors"
-    //XCURSOR_SIZE "24"
+    XCURSOR_SIZE "24"
     GDK_BACKEND "wayland,x11"
     MOZ_ENABLE_WAYLAND "1"
     SDL_VIDEODRIVER "wayland,x11"
     ELECTRON_OZONE_PLATFORM_HINT "wayland"
     _JAVA_AWT_WM_NONREPARENTING "1"
     GTK_THEME "rose-pine-gtk"
-    XDG_CURRENT_DESKTOP "niri:wlroots"
     XDG_SESSION_TYPE "wayland"
     XDG_DATA_HOME "/home/user/.local/share"
     XDG_STATE_HOME "/home/user/.local/state"
     XDG_CONFIG_HOME "/home/user/.config"
     XDG_DATA_DIRS "/home/user/.local/share:/usr/local/share:/usr/share:/var/lib/flatpak/exports/share:/home/user/.local/share/flatpak/exports/share"
-    __fish_config_dir "home/user/.config/fish"
     CLUTTER_BACKEND "wayland"
 }
 /*=======================================================================
@@ -1079,7 +1075,11 @@ overview {
 /*=======================================================================
 ------------------------------auto-startup-------------------------------
 =======================================================================*/
-    spawn-sh-at-startup "dbus-update-activation-environment DISPLAY XAUTHORITY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri"
+spawn-at-startup {
+    "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP=niri" "XDG_RUNTIME_DIR"
+    "dbus-update-activation-environment" "--all"
+    "dbus-send" "--session" "--reconnect" "--dest=org.freedesktop.DBus" "/org/freedesktop/DBus" "org.freedesktop.DBus.ReloadConfig"
+}
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
     spawn-at-startup "waybar"
