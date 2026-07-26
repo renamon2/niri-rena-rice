@@ -35,10 +35,13 @@ REQUIRED_APPS=(
 )
 MISSING_APPS=($(type -p "${REQUIRED_APPS[@]}" 2>&1 | awk '/not found|/ {print $NF}' | tr -d "«»'\"`"))
 # PACKAGE MANAGER
-if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
-    echo "vostok linux repo found"
-    sudo xbps-install -Suy "${MISSING_APPS[@]}"
-    echo "installed missing apps: ${MISSING_APPS[@]}"
+if [ ${#MISSING_APPS[@]} -gt 0 ]; then
+    echo "⚠️ Обнаружены отсутствующие пакеты: ${MISSING_APPS[*]}"
+    if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
+        echo "vostok linux repo found"
+        sudo xbps-install -Suy "${MISSING_APPS[@]}"
+        echo "installed missing apps: ${MISSING_APPS[@]}"
+    fi
 fi
 ### KITTY ###
 # VARIABLES
