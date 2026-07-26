@@ -27,7 +27,7 @@ else
 fi
 # PACKAGE MANAGER
 if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
-    PACKAGE="niri btop xdg-desktop-portal-wlr dolphin jq wireshark-qt firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git NetworkManager pavucontrol nerd-fonts-symbols-ttf font-firacode curl qt5-wayland kitty Waybar fish-shell SwayNotificationCenter rofi"
+    PACKAGE="niri btop xdg-desktop-portal-wlr awww dolphin jq wireshark-qt firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git NetworkManager pavucontrol nerd-fonts-symbols-ttf font-firacode curl qt5-wayland kitty Waybar fish-shell SwayNotificationCenter rofi"
     PKG_MANAGER="xbps-install -Suy"
     sudo $PKG_MANAGER $PACKAGE
     echo "vostok linux repo found"
@@ -1063,8 +1063,8 @@ overview {
 	spawn-at-startup "pipewire"
 	spawn-at-startup "wireplumber"
 	spawn-at-startup "waybar"
-    spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png >/dev/null 2>&1"
-    spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur >/dev/null 2>&1"
+    spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png"
+    spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur"
 	spawn-at-startup "swaync"
 /*=======================================================================
 ----------------------------------another--------------------------------
@@ -1254,7 +1254,6 @@ binds {
     Mod+J     { focus-window-or-workspace-down; }
     Mod+K     { focus-window-or-workspace-up; }
     Mod+L     { focus-column-right; }
-    //Перемещение колонки
     Mod+Alt+Left  { move-column-left; }
     Mod+Alt+Right { move-column-right; }
     Mod+Alt+Up       { move-window-up-or-to-workspace-up; }
@@ -1281,7 +1280,7 @@ binds {
 
     Mod+W  { toggle-column-tabbed-display; }
 
-    Alt+Print  { screenshot-screen; }
+    Mod+Print  { screenshot-screen; }
     Print  { screenshot-window; }
 
     Mod+Escape  { toggle-keyboard-shortcuts-inhibit; }
@@ -1301,8 +1300,6 @@ binds {
     XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
     XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    Mod+Space       { switch-layout "next"; }
-    Mod+Shift+Space { switch-layout "prev"; }
     Mod+C           { center-column; }
     Mod+Alt+C       { center-visible-columns; }
     Mod+Shift+R { switch-preset-column-width-back; }
@@ -1310,45 +1307,13 @@ binds {
     Mod+Alt+R { reset-window-height; }
     Mod+Shift+F { fullscreen-window; }
     Mod+Alt+F { expand-column-to-available-width; }
-    //Mod+Comma  { consume-window-into-column; }
-    //Mod+Period { expel-window-from-column; }
     Mod+TouchpadScrollDown { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
     Mod+TouchpadScrollUp   { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
-    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
-    Mod+Alt+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
-    Mod+Alt+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
 
-    Mod+WheelScrollRight      { focus-column-right; }
-    Mod+WheelScrollLeft       { focus-column-left; }
-    Mod+Alt+WheelScrollRight { move-column-right; }
-    Mod+Alt+WheelScrollLeft  { move-column-left; }
-
-    Mod+Shift+WheelScrollDown      { focus-column-right; }
-    Mod+Shift+WheelScrollUp        { focus-column-left; }
-    Mod+Alt+Shift+WheelScrollDown { move-column-right; }
-    Mod+Alt+Shift+WheelScrollUp   { move-column-left; }
     Mod+Shift+Left  { focus-monitor-left; }
     Mod+Shift+Down  { focus-monitor-down; }
     Mod+Shift+Up    { focus-monitor-up; }
     Mod+Shift+Right { focus-monitor-right; }
-    Mod+Shift+Alt+Left  { move-column-to-monitor-left; }
-    Mod+Shift+Alt+Down  { move-column-to-monitor-down; }
-    Mod+Shift+Alt+Up    { move-column-to-monitor-up; }
-    Mod+Shift+Alt+Right { move-column-to-monitor-right; }
-    Mod+Ctrl+Left  { move-workspace-to-monitor-left; }
-    Mod+Ctrl+Right  { move-workspace-to-monitor-right; }
-    Mod+Ctrl+Down  { move-workspace-to-monitor-down; }
-    Mod+Ctrl+Up  { move-workspace-to-monitor-up; }
-    Mod+1 { move-window-to-workspace 1; }
-    Mod+2 { move-window-to-workspace 2; }
-    Mod+3 { move-window-to-workspace 3; }
-    Mod+4 { move-window-to-workspace 4; }
-    Mod+5 { move-window-to-workspace 5; }
-    Mod+6 { move-window-to-workspace 6; }
-    Mod+7 { move-window-to-workspace 7; }
-    Mod+8 { move-window-to-workspace 8; }
-    Mod+9 { move-window-to-workspace 9; }
 }
 EOF
     echo "$CFG has been installed."
@@ -1367,4 +1332,15 @@ echo "wallpaper for overview installed"
 curl -sSL "$URL2" -o "$WALL_DIR/toki_in_space-blurred.png"
 echo "niri wallpaper have been installed."
 echo "niri is configured"
+
+DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xdg-desktop-portal"
+mkdir -p "$DEST_DIR"
+touch "$DEST_DIR/portals.conf"
+cat << 'EOF' > "$DEST_DIR/portals.conf"
+[preferred]
+default=gtk
+org.freedesktop.impl.portal.ScreenCast=wlr
+org.freedesktop.impl.portal.Screenshot=wlr
+EOF
+
 exit 0
