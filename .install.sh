@@ -1073,11 +1073,11 @@ overview {
     }
 }
 /*=======================================================================
-------------------------------auto-startup-------------------------------
+-------------------------------auto-startup------------------------------
 =======================================================================*/
     spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri XDG_RUNTIME_DIR"
     spawn-sh-at-startup "dbus-update-activation-environment --all"
-    spawn-sh-at-startup "dbus-send --session --reconnect --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ReloadConfig"
+    // spawn-sh-at-startup "dbus-send --session --reconnect --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ReloadConfig"
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
     spawn-at-startup "waybar"
@@ -1148,6 +1148,7 @@ window-rule {
     }
 }
 window-rule {
+    match app-id=r#"^org.pulseaudio.pavucontrol$"#
     match app-id=r#"^gimp$"# title="^Запуск GIMP$"
     match app-id="^gimp$" title="^Добро пожаловать в GIMP"
     match app-id=r#"^gimp$"# title="^Starting GIMP$"
@@ -1170,14 +1171,11 @@ window-rule {
 window-rule {
     match app-id=r#"^org.telegram.desktop$"#
     match app-id=r#"^com.ayugram.desktop$"#
+    opacity 0.95
     border {
         off
     }
     block-out-from "screen-capture"
-}
-window-rule {
-    match app-id=r#"^kitty$"#
-    default-column-width {}
 }
 window-rule {
     match app-id=r#"^org.kde.dolphin$"#
@@ -1209,13 +1207,6 @@ window-rule {
     }
 }
 window-rule {
-    match app-id=r#"^org.pulseaudio.pavucontrol$"#
-    open-floating true
-    default-column-width { fixed 660; }
-    default-window-height { fixed 570; }
-    default-floating-position x=15 y=10 relative-to="top-right"
-}
-window-rule {
     geometry-corner-radius 8
     clip-to-geometry true
 }
@@ -1232,6 +1223,7 @@ window-rule {
 =======================================================================*/
 layer-rule {
     match namespace="^waybar$"
+    match namespace="^rofi$"
     background-effect {
 	xray true
         blur true
@@ -1240,17 +1232,8 @@ layer-rule {
     }
 }
 layer-rule {
-    match namespace="^awww-daemon-blur$"
+    match namespace="^awww-daemonblur$"
     place-within-backdrop true
-}
-layer-rule {
-    match namespace="^rofi$"
-    background-effect {
-        xray true
-        blur true
-        noise 0.05
-        saturation 3
-    }
 }
 /*=======================================================================
 ----------------------------Hotkey Bindkeys------------------------------
@@ -1276,42 +1259,29 @@ binds {
     Mod+Alt+Right { move-column-right; }
     Mod+Alt+Up       { move-window-up-or-to-workspace-up; }
     Mod+Alt+Down     { move-window-down-or-to-workspace-down; }
-
     Mod+Alt+H     { move-column-left; }
     Mod+Alt+J     { move-column-right; }
     Mod+Alt+K     { move-window-up-or-to-workspace-up; }
     Mod+Alt+L     { move-window-down-or-to-workspace-down; }
-
     Mod+Tab { focus-workspace-previous; }
-
     Mod+Comma  { consume-or-expel-window-left; }
     Mod+Period { consume-or-expel-window-right; }
-
     Mod+R { switch-preset-column-width; }
     Mod+Minus { set-column-width "-10%"; }
     Mod+Equal { set-column-width "+10%"; }
     Mod+Shift+Minus { set-window-height "-10%"; }
     Mod+Shift+Equal { set-window-height "+10%"; }
-
     Mod+V  { toggle-window-floating; }
     Mod+Alt+V  { switch-focus-between-floating-and-tiling; }
-
     Mod+W  { toggle-column-tabbed-display; }
-
     Mod+Print  { screenshot-screen; }
-    Print  { screenshot-window; }
-
     Mod+Escape  { toggle-keyboard-shortcuts-inhibit; }
-
     Mod+Shift+E  { quit; }
-
     Mod+Shift+P  { power-off-monitors; }
-
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
     XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-
     XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
     XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
     XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
@@ -1327,7 +1297,6 @@ binds {
     Mod+Alt+F { expand-column-to-available-width; }
     Mod+TouchpadScrollDown { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
     Mod+TouchpadScrollUp   { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
-
     Mod+Shift+Left  { focus-monitor-left; }
     Mod+Shift+Down  { focus-monitor-down; }
     Mod+Shift+Up    { focus-monitor-up; }
