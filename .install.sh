@@ -1338,9 +1338,7 @@ mkdir -p "$DEST_DIR"
 touch "$DEST_DIR/portals.conf"
 cat << 'EOF' > "$DEST_DIR/portals.conf"
 [preferred]
-default=gtk
-org.freedesktop.impl.portal.ScreenCast=wlr
-org.freedesktop.impl.portal.Screenshot=wlr
+default=wlr
 EOF
 
 exit 0
