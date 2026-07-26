@@ -1359,7 +1359,9 @@ echo "$DEST_DIR created"
 echo "$DEST_DIR/portals.conf created"
 cat << 'EOF' > "$DEST_DIR/portals.conf"
 [preferred]
-default=wlr
+default=gtk
+org.freedesktop.impl.portal.ScreenCast=gnome
+org.freedesktop.impl.portal.Screenshot=gnome
 EOF
 echo "xdg-desktop-portal configured"
 
