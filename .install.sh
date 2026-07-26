@@ -25,14 +25,21 @@ if ask_yes_no; then
 else
     BACKUP=no
 fi
+REQUIRED_APPS=(
+    "niri" "btop" "xdg-desktop-portal-wlr" "awww" "dolphin" "jq"
+    "wireshark-qt" "firefox" "octoxbps" "zed" "gwenview" "ark"
+    "gucharmap" "xdg-desktop-portal-gtk" "qt6-wayland" "git"
+    "NetworkManager" "pavucontrol" "nerd-fonts-symbols-ttf"
+    "font-firacode" "curl" "qt5-wayland" "kitty" "Waybar"
+    "fish" "SwayNotificationCenter" "rofi"
+)
+MISSING_APPS=($(type -p "${REQUIRED_APPS[@]}" 2>&1 | awk '/not found|/ {print $NF}' | tr -d "«»'\"`"))
 # PACKAGE MANAGER
 if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
-    PACKAGE="niri btop xdg-desktop-portal-wlr awww dolphin jq wireshark-qt firefox octoxbps zed gwenview ark gucharmap xdg-desktop-portal-gtk qt6-wayland git NetworkManager pavucontrol nerd-fonts-symbols-ttf font-firacode curl qt5-wayland kitty Waybar fish-shell SwayNotificationCenter rofi"
-    PKG_MANAGER="xbps-install -Suy"
-    sudo $PKG_MANAGER $PACKAGE
     echo "vostok linux repo found"
+    sudo xbps-install -Suy "${MISSING_APPS[@]}"
+    echo "installed missing apps: ${MISSING_APPS[@]}"
 fi
-
 ### KITTY ###
 # VARIABLES
 DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/kitty"
