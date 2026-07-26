@@ -1075,11 +1075,9 @@ overview {
 /*=======================================================================
 ------------------------------auto-startup-------------------------------
 =======================================================================*/
-spawn-at-startup {
-    "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP=niri" "XDG_RUNTIME_DIR"
-    "dbus-update-activation-environment" "--all"
-    "dbus-send" "--session" "--reconnect" "--dest=org.freedesktop.DBus" "/org/freedesktop/DBus" "org.freedesktop.DBus.ReloadConfig"
-}
+    spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri XDG_RUNTIME_DIR"
+    spawn-sh-at-startup "dbus-update-activation-environment --all"
+    spawn-sh-at-startup "dbus-send --session --reconnect --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ReloadConfig"
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
     spawn-at-startup "waybar"
