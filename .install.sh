@@ -833,16 +833,11 @@ cat << 'EOF' > "$CFG"
 --------------------------------environment------------------------------
 =======================================================================*/
 environment {
-    LANG "en_US.UTF-8"
-    LC_TIME "en_US.UTF-8"
-    LC_NUMERIC "en_US.UTF-8"
-    LC_MONEY "en_US.UTF-8"
-    LC_MEASUREMENT "en_US.UTF-8"
     XMODIFIERS "@im=none"
     FONTCONFIG_FONT_RENDER_STYLE "hintslight"
     QT_QPA_PLATFORM "wayland;xcb"
     QT_QPA_PLATFORMTHEME "qt6ct"
-    // QT_COLOR_SCHEME "dark"
+    QT_COLOR_SCHEME "dark"
     QT_STYLE_OVERRIDE "kvantum"
     QT_CURSORS_SIZE "24"
     XCURSOR_PATH "/home/user/.local/share/icons"
@@ -1065,13 +1060,12 @@ overview {
 /*=======================================================================
 ------------------------------auto-startup-------------------------------
 =======================================================================*/
-    spawn-at-startup "xwayland-satellite"
-	spawn-sh-at-startup "systemctl --user start pipewire.socket pipewire-pulse.socket wireplumber.service"
-	spawn-sh-at-startup "env PIPEWIRE_DEBUG=0 pipewire >/dev/null 2>&1 && wireplumber >/dev/null 2>&1"
-	spawn-sh-at-startup "waybar"
+	spawn-at-startup "pipewire"
+	spawn-at-startup "wireplumber"
+	spawn-at-startup "waybar"
     spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png >/dev/null 2>&1"
     spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur >/dev/null 2>&1"
-	spawn-sh-at-startup "swaync >/dev/null 2>&1"
+	spawn-at-startup "swaync"
 /*=======================================================================
 ----------------------------------another--------------------------------
 =======================================================================*/
@@ -1080,10 +1074,10 @@ hotkey-overlay {
 }
 prefer-no-csd
 screenshot-path "~/Pictures/Screenshots from %Y-%m-%d %H-%M-%S.png"
-/* xwayland-satellite {
-    off
-    "xwayland-satellite"
-} */
+xwayland-satellite {
+    // off
+    path "xwayland-satellite"
+}
 clipboard {
     disable-primary
 }
