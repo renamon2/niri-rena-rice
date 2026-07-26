@@ -1079,7 +1079,7 @@ overview {
 /*=======================================================================
 ------------------------------auto-startup-------------------------------
 =======================================================================*/
-    spawn-sh-at-startup "dbus-update-activation-environment --all"
+    spawn-sh-at-startup "dbus-update-activation-environment DISPLAY XAUTHORITY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri"
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
     spawn-at-startup "waybar"
