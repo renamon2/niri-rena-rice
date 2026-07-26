@@ -1139,7 +1139,7 @@ window-rule {
     match app-id=r#"^gimp$"# title="^Запуск GIMP$"
     match app-id="^gimp$" title="^Добро пожаловать в GIMP"
     match app-id=r#"^gimp$"# title="^Starting GIMP$"
-    match app-id="^gimp$" title="^Welcome to GIMP
+    match app-id="^gimp$" title="^Welcome to GIMP"
     match app-id=r#"^org.kde.gwenview$"#
     match app-id=r#"^Firefox$"# title="^Close Firefox$"
     match app-id="^Firefox$" title="^Picture-in-Picture$"
