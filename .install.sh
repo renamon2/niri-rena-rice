@@ -34,7 +34,7 @@ NOT_PACKAGES='nerd-fonts-symbols-ttf font-firacode papirus-icon-theme'
 REQUIRED_APPS=(
     "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq" "wireshark-qt" "firefox" "octoxbps"
     "zed" "gwenview" "ark" "gucharmap" "xdg-desktop-portal-gtk" "git" "NetworkManager" "pavucontrol" "kitty" "Waybar"
-    "fish" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
+    "fish-shell" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
 )
 MISSING_APPS=()
 ### FUNCTIONS ###
