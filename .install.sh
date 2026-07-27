@@ -2,10 +2,10 @@
 ### VARIABLES ###
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-KITTY_DIR="$XDG_CONFIG_HOME/kitty"
+KITTY_DIR="$XDG_CONFIG_HOME/kitty/"
 KITTY_URL='https://github.com/ttys3/oh-my-kitty.git'
 WAYBAR_DIR="$XDG_CONFIG_HOME/waybar"
-KVANTUM_DIR="$XDG_CONFIG_HOME/kvantum"
+KVANTUM_DIR="$XDG_CONFIG_HOME/Kvantum"
 THEME_URL='https://github.com/renamon2/kvantum-rena/raw/refs/heads/master/rena-night.tar.gz'
 TEMP_DIR='/tmp/rena-night'
 QT6CT_DIR="$XDG_CONFIG_HOME/qt6ct"
@@ -107,7 +107,14 @@ else
     echo "Backup skipped."
 fi
 ### KITTY ###
-git clone "$KITTY_URL" "$KITTY_DIR"
+rm -rf "$KITTY_DIR"
+if git clone "$KITTY_URL" "$KITTY_DIR"; then
+    echo "kitty cfg installed"
+    rm -rf "$KITTY_DIR/.git" "$KITTY_DIR/.gitignore"
+    echo "delete .git and .gitignore in $KITTY_DIR"
+else
+    exit 1
+fi
 echo "kitty cgf installed"
 rm -rf "$KITTY_DIR/.git" "$KITTY_DIR/.gitignore"
 echo "delete .git and .gitignore in $KITTY_DIR"
@@ -140,11 +147,10 @@ EOF
 echo "Kitty color scheme installed"
 ### WAYBAR ###
 # CREATION config.jsonc
-cat << 'EOF' > "$WAYBAR/config.jsonc"
+cat << 'EOF' > "$WAYBAR_DIR/config.jsonc"
 {
   "layer": "top",
   "position": "top",
-
   "blur": true,
   "modules-left": [
     "tray",
@@ -482,6 +488,11 @@ mkdir -p "$TEMP_DIR"
 mkdir -p "$KVANTUM_DIR/rena-night"
 curl -L "$THEME_URL" -o "$TEMP_DIR/rena-night.tar.gz"
 tar -xzf "$TEMP_DIR/rena-night.tar.gz" -C "$KVANTUM_DIR/" && rm -rf "$TEMP_DIR"
+touch "$KVANTUM_DIR/kvantum.kvconfig"
+cat << 'EOF' > "$KVANTUM_DIR/kvantum.kvconfig"
+[General]
+theme=rena-night
+EOF
 echo -e "Writing qt6ct.conf configuration..."
 cat << 'EOF' > "$QT6CT_DIR/qt6ct.conf"
 [Appearance]
@@ -1083,16 +1094,20 @@ animations {
     }
 }
 window-rule {
-    opacity 0.95}
+    opacity 0.95
+}
 window-rule {
     geometry-corner-radius 8
-    clip-to-geometry true}
+    clip-to-geometry true
+    }
 window-rule {
     match is-floating=true
     border {
         width 1
         active-color "#c372ac"
-        inactive-color "#18222e"}}
+        inactive-color "#18222e"
+        }
+        }
 window-rule {
     match app-id=r#"^org.pulseaudio.pavucontrol$"#
     match app-id=r#"^gimp$"# title="^Запуск GIMP$"
@@ -1106,19 +1121,23 @@ window-rule {
     match app-id=r#"^gucharmap$"#
     match app-id=r#"^qt-sudo$"#
     open-floating true
-    opacity 1.0}
+    opacity 1.0
+    }
 window-rule {
     match app-id=r#"^gimp$"# title="GNU Image Manipulation Program"
     open-maximized-to-edges true
     opacity 1.0
-    tiled-state true}
+    tiled-state true
+    }
 window-rule {
     match app-id=r#"^org.telegram.desktop$"#
     match app-id=r#"^com.ayugram.desktop$"#
     opacity 0.95
     block-out-from "screen-capture"
     border {
-        off}}
+        off
+        }
+        }
 window-rule {
     match app-id=r#"^org.kde.dolphin$"#
     opacity 0.975
@@ -1233,7 +1252,8 @@ binds {
     Mod+Shift+Up    { focus-monitor-up; }
     Mod+Shift+Right { focus-monitor-right; }
 }
-EOF && echo "$NIRI_CFG is updated."
+EOF
+echo "$NIRI_CFG is updated."
 sed "s/user/$USER/g" "$NIRI_CFG" > "$NIRI_CFG.tmp" && mv "$NIRI_CFG.tmp" "$NIRI_CFG" && echo "$NIRI_CFG user update."
 
 curl -sSL "$HELP_URL" -o "$HELP_DIR/help.tar.gz" && echo "niri help has been installed."
