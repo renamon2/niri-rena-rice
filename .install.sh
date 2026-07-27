@@ -30,12 +30,10 @@ XDG_DESKTOP_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xdg-desktop-portal"
 B='Backup create:'
 C='Create:'
 CURRENT_DATE=$(date +%Y-%m-%d_%H-%M-%S)
+NOT_PACKAGES='nerd-fonts-symbols-ttf font-firacode papirus-icon-theme'
 REQUIRED_APPS=(
-    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq"
-    "wireshark-qt" "firefox" "octoxbps" "zed" "gwenview" "ark"
-    "gucharmap" "xdg-desktop-portal-gtk" "qt6-wayland" "git"
-    "NetworkManager" "pavucontrol" "nerd-fonts-symbols-ttf"
-    "font-firacode" "curl" "qt5-wayland" "kitty" "Waybar" "papirus-icon-theme"
+    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq" "wireshark-qt" "firefox" "octoxbps"
+    "zed" "gwenview" "ark""gucharmap" "xdg-desktop-portal-gtk" "git" "NetworkManager" "pavucontrol" "kitty" "Waybar"
     "fish" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
 )
 MISSING_APPS=()
@@ -87,7 +85,7 @@ if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
     echo "Found missing packages: ${MISSING_APPS[*]}"
     if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
         echo "vostok linux repo found"
-        sudo xbps-install -Sy "${MISSING_APPS[@]}"
+        sudo xbps-install -Sy "${MISSING_APPS[@]}" "NOT_PACKAGES"
         echo "installed missing apps: ${MISSING_APPS[@]}"
     elif ! grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null; then
         echo "vostok linux repo not found. Adding repository..."
