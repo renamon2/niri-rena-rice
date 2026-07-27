@@ -1,4 +1,5 @@
 #!/bin/bash
+### VARIABLES ###
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 KITTY_DIR="$XDG_CONFIG_HOME/kitty"
@@ -38,33 +39,15 @@ REQUIRED_APPS=(
     "fish" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
 )
 MISSING_APPS=()
-for app in "${REQUIRED_APPS[@]}"; do
-    command -v "$app" >/dev/null 2>&1 || MISSING_APPS+=("$app")
-done
-# PACKAGE MANAGER
-if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
-    echo "Found missing packages: ${MISSING_APPS[*]}"
-    if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
-        echo "vostok linux repo found"
-        sudo xbps-install -Suy "${MISSING_APPS[@]}"
-        echo "installed missing apps: ${MISSING_APPS[@]}"
-    elif ! grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null; then
-        echo "vostok linux repo not found. Adding repository..."
-        echo "repository=https://vostoklinux.org" | sudo tee /etc/xbps.d/vostok.conf > /null
-        sudo xbps-install -Suy "${MISSING_APPS[@]}"
-        echo "installed missing apps: ${MISSING_APPS[@]}"
-    else
-        clear
-        echo "Only support void and vostok linux"
-    fi
-fi
+### FUNCTIONS ###
 ask_yes_no() {
-    read -p "$1 backup create? (Y/n): " yn < /dev/tty
+    local prompt="${1:-Do you want to create a backup?}"
+    read -p "$prompt (Y/n): " yn < /dev/tty
     case $yn in
         [YyДд]* | [Yy][Ee][Ss] | [Дд][Аа] | "yep" | "yeah" | "sure" )
             return 0
             ;;
-        [NnНн]* | [Nn][Oo] | [Нн][Ее][Тт] | "nope" | "nay" )
+        [NnНн]* | [Nn][Oo] | [Нн][Ее][Тт] | "nope" | "nay" | "" ) # Enter теперь тоже NO
             return 1
             ;;
         * )
@@ -73,88 +56,60 @@ ask_yes_no() {
             ;;
     esac
 }
-if ask_yes_no; then
-    shopt -s dotglob
-    shopt -s nullglob
-    if [ -d "$KITTY_DIR" ]; then
-        echo "$KITTY_DIR found"
-        for file in "$KITTY_DIR"/*; do
+process_backup() {
+    local dir="$1"
+    local dir_name="$2"
+    shift 2
+    local touch_files=("$@")
+    if [ -d "$dir" ]; then
+        echo "$dir found"
+        shopt -s dotglob nullglob
+        for file in "$dir"/*; do
             if [ -f "$file" ] && [[ "$file" != *.bak ]]; then
                 mv "$file" "${file}_${CURRENT_DATE}.bak"
                 echo "$B $(basename "$file")"
             fi
         done
-        shopt -u dotglob
-        shopt -u nullglob
+        shopt -u dotglob nullglob
     else
-        echo "$KITTY_DIR no found"
-        mkdir -p "$KITTY_DIR" && echo "$C $KITTY_DIR"
+        echo "$dir not found"
+        mkdir -p "$dir" && echo "$C $dir"
     fi
-    if [ -d "$WAYBAR_DIR" ]; then
-        for file in "$WAYBAR_DIR"/*; do
-            if [ -f "$file" ] && [[ "file != *.bak "]]; then
-                mv "$file" "${file}_${CURRENT_DATE}.bak"
-                echo "$B $(basename "$file")"
-            fi
-        done
-        touch "$WAYBAR_DIR/config.jsonc" && touch "$WAYBAR_DIR/style.css"
-        echo "$WAYBAR_DIR $C config.jsonc & style.css"
-        shopt -u dotglob
-        shopt -u nullglob
+    for t_file in "${touch_files[@]}"; do
+        touch "$dir/$t_file" && echo "$dir $C $t_file"
+    done
+}
+for app in "${REQUIRED_APPS[@]}"; do
+    xbps-query -l "$app" >/dev/null 2>&1 || MISSING_APPS+=("$app")
+done
+### INSTALL PACKAGES ###
+if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
+    echo "Found missing packages: ${MISSING_APPS[*]}"
+    if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
+        echo "vostok linux repo found"
+        sudo xbps-install -Sy "${MISSING_APPS[@]}"
+        echo "installed missing apps: ${MISSING_APPS[@]}"
+    elif ! grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null; then
+        echo "vostok linux repo not found. Adding repository..."
+        echo "repository=https://vostoklinux.org" | sudo tee /etc/xbps.d/vostok.conf > /null
+        sudo xbps-install -Suy "${MISSING_APPS[@]}"
+        echo "installed missing apps: ${MISSING_APPS[@]}"
     else
-        echo "$WAYBAR_DIR no found"
-        mkdir -p "$WAYBAR_DIR" && echo "$C $WAYBAR_DIR" && touch "$WAYBAR_DIR/config.jsonc" && touch "$WAYBAR_DIR/style.css"
-        echo "$WAYBAR_DIR $C config.jsonc & style.css"
-    fi
-    if [ -d "$KVANTUM_DIR" ]; then
-        for file in "$KVANTUM_DIR"/*; do
-            if [ -f "$file" ] && [[ "file != *.bak "]]; then
-                mv "$file" "${file}_${CURRENT_DATE}.bak"
-                echo "$B $(basename "$file")"
-            fi
-        done
-        touch "$KVANTUM_DIR/kvantum.kvconfig" && echo "$C $KVANTUM_DIR/kvantum.kvconfig"
-        shopt -u dotglob
-        shopt -u nullglob
-    else
-        echo "$KVANTUM_DIR no found"
-        mkdir -p "$KVANTUM_DIR" && echo "$C $KVANTUM_DIR"
-        touch "$KVANTUM_DIR/kvantum.kvconfig" && echo "$C $KVANTUM_DIR/kvantum.kvconfig"
-    fi
-    if [ -d "$QT6CT_DIR" ]; then
-        for file in "$QT6CT_DIR"/*; do
-            if [ -f "$file" ] && [[ "file != *.bak "]]; then
-                mv "$file" "${file}_${CURRENT_DATE}.bak"
-                echo "$B $(basename "$file")"
-            fi
-        done
-        touch "$QT6CT_DIR/qt6ct.conf" && echo "$C $QT6CT/qt6ct.conf"
-        shopt -u dotglob
-        shopt -u nullglob
-    else
-        echo "$QT6CT no found"
-        mkdir -p "$QT6CT_DIR" && echo "$C $QT6CT_DIR"
-        touch "$QT6CT_DIR/qt6ct.conf" && echo "$C $QT6CT_DIR/qt6ct.conf"
-    fi
-    if [ -d "$ROFI_DIR" ]; then
-        for file in "$ROFI_DIR"/*; do
-            if [ -f "$file" ] && [[ "file != *.bak" ]]; then
-                mv "$file" "${file}_${CURRENT_DATE}.bak"
-                echo "$B $(basename "$file")"
-            fi
-        done
-        touch "$ROFI_DIR/config.rasi" && echo "$C $ROFI_DIR/config.rasi"
-        shopt -u dotglob
-        shopt -u nullglob
-    else
-        echo "$Q no found"
-        mkdir -p "$ROFI_DIR" && echo "$C $ROFI_DIR"
-        touch "$ROFI_DIR/config.rasi" && echo "$C $ROFI_DIR/config.rasi"
+        clear
+        echo "Only support void and vostok linux" && exit 1
     fi
 fi
-
+### BACKUPING ###
+if ask_yes_no "Configuration files"; then
+    process_backup "$KITTY_DIR" "KITTY"
+    process_backup "$WAYBAR_DIR" "WAYBAR" "config.jsonc" "style.css"
+    process_backup "$KVANTUM_DIR" "KVANTUM" "kvantum.kvconfig"
+    process_backup "$QT6CT_DIR" "QT6CT" "qt6ct.conf"
+    process_backup "$ROFI_DIR" "ROFI" "config.rasi"
+else
+    echo "Backup skipped."
+fi
 ### KITTY ###
-# GIT CLONE
 git clone "$KITTY_URL" "$KITTY_DIR"
 echo "kitty cgf installed"
 rm -rf "$KITTY_DIR/.git" "$KITTY_DIR/.gitignore"
