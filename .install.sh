@@ -1,10 +1,65 @@
 #!/bin/bash
-ask_yes_no() {
-    read -t 5 -p "$1 (Y/n) [Auto-yes in 5s]: " yn < /dev/tty
-    if [ -z "$yn" ]; then
-        echo -e "\nTimeout or Enter pressed! Defaulting to: YES"
-        return 0
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+KITTY_DIR="$XDG_CONFIG_HOME/kitty"
+KITTY_URL="https://github.com/ttys3/oh-my-kitty.git"
+WAYBAR_DIR="$XDG_CONFIG_HOME/waybar"
+KVANTUM_DIR="$XDG_CONFIG_HOME/Kvantum"
+THEME_URL="https://github.com/renamon2/kvantum-rena/raw/refs/heads/master/rena-night.tar.gz"
+TEMP_DIR="/tmp/rena-night"
+QT6CT_DIR="$XDG_CONFIG_HOME/qt6ct"
+GTK_URL="https://github.com/rose-pine/gtk.git"
+TEMP1_DIR="/tmp/gtk-pine-rose"
+THEME_DIR="$XDG_DATA_HOME/themes"
+THEME_NAME="rose-pine-gtk"
+THEME_FULL_DIR="$THEME_DIR/$THEME_NAME"
+DEST_DIR_GTK3="$XDG_CONFIG_HOME/gtk-3.0"
+DEST_DIR_GTK4="$XDG_CONFIG_HOME/gtk-4.0"
+ROFI_DIR=$XDG_CONFIG_HOME/rofi
+FISH_URL="https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish"
+FISH_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish"
+NIRI_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/niri"
+HELP_DIR="$DEST_DIR/help"
+NIRI_CFG="$DEST_DIR/config.kdl"
+WALL_DIR="$DEST_DIR/wallpaper/awww/"
+WALL1_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-0.3_overview.png"
+WALL2_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-blurred.png"
+HELP_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/main/help.tar.gz"
+XDG_DESKTOP_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xdg-desktop-portal"
+B='Backup create:'
+C='Create:'
+CURRENT_DATE=$(date +%Y-%m-%d_%H-%M-%S)
+REQUIRED_APPS=(
+    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq"
+    "wireshark-qt" "firefox" "octoxbps" "zed" "gwenview" "ark"
+    "gucharmap" "xdg-desktop-portal-gtk" "qt6-wayland" "git"
+    "NetworkManager" "pavucontrol" "nerd-fonts-symbols-ttf"
+    "font-firacode" "curl" "qt5-wayland" "kitty" "Waybar" "papirus-icon-theme"
+    "fish" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
+)
+MISSING_APPS=()
+for app in "${REQUIRED_APPS[@]}"; do
+    command -v "$app" >/dev/null 2>&1 || MISSING_APPS+=("$app")
+done
+# PACKAGE MANAGER
+if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
+    echo "Found missing packages: ${MISSING_APPS[*]}"
+    if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
+        echo "vostok linux repo found"
+        sudo xbps-install -Suy "${MISSING_APPS[@]}"
+        echo "installed missing apps: ${MISSING_APPS[@]}"
+    elif ! grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null; then
+        echo "vostok linux repo not found. Adding repository..."
+        echo "repository=https://vostoklinux.org" | sudo tee /etc/xbps.d/vostok.conf > /null
+        sudo xbps-install -Suy "${MISSING_APPS[@]}"
+        echo "installed missing apps: ${MISSING_APPS[@]}"
+    else
+        clear
+        echo "Only support void and vostok linux"
     fi
+fi
+ask_yes_no() {
+    read -p "$1 backup create? (Y/n): " yn < /dev/tty
     case $yn in
         [YyДд]* | [Yy][Ee][Ss] | [Дд][Аа] | "yep" | "yeah" | "sure" )
             return 0
@@ -18,56 +73,96 @@ ask_yes_no() {
             ;;
     esac
 }
-# BACKUP QUESTION
-BACKUP=no
 if ask_yes_no; then
-    BACKUP=yes
-else
-    BACKUP=no
-fi
-REQUIRED_APPS=(
-    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq"
-    "wireshark-qt" "firefox" "octoxbps" "zed" "gwenview" "ark"
-    "gucharmap" "xdg-desktop-portal-gtk" "qt6-wayland" "git"
-    "NetworkManager" "pavucontrol" "nerd-fonts-symbols-ttf"
-    "font-firacode" "curl" "qt5-wayland" "kitty" "Waybar"
-    "fish" "SwayNotificationCenter" "rofi"
-)
-MISSING_APPS=()
-for app in "${REQUIRED_APPS[@]}"; do
-    command -v "$app" >/dev/null 2>&1 || MISSING_APPS+=("$app")
-done
-# PACKAGE MANAGER
-if [ ${#MISSING_APPS[@]} -gt 0 ]; then
-    echo "Found missing packages: ${MISSING_APPS[*]}"
-    if command -v xbps-install && grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -rq "vostoklinux.org" /usr/share/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
-        echo "vostok linux repo found"
-        sudo xbps-install -Suy "${MISSING_APPS[@]}"
-        echo "installed missing apps: ${MISSING_APPS[@]}"
+    shopt -s dotglob
+    shopt -s nullglob
+    if [ -d "$KITTY_DIR" ]; then
+        echo "$KITTY_DIR found"
+        for file in "$KITTY_DIR"/*; do
+            if [ -f "$file" ] && [[ "$file" != *.bak ]]; then
+                mv "$file" "${file}_${CURRENT_DATE}.bak"
+                echo "$B $(basename "$file")"
+            fi
+        done
+        shopt -u dotglob
+        shopt -u nullglob
+    else
+        echo "$KITTY_DIR no found"
+        mkdir -p "$KITTY_DIR" && echo "$C $KITTY_DIR"
+    fi
+    if [ -d "$WAYBAR_DIR" ]; then
+        for file in "$WAYBAR_DIR"/*; do
+            if [ -f "$file" ] && [[ "file != *.bak "]]; then
+                mv "$file" "${file}_${CURRENT_DATE}.bak"
+                echo "$B $(basename "$file")"
+            fi
+        done
+        touch "$WAYBAR_DIR/config.jsonc" && touch "$WAYBAR_DIR/style.css"
+        echo "$WAYBAR_DIR $C config.jsonc & style.css"
+        shopt -u dotglob
+        shopt -u nullglob
+    else
+        echo "$WAYBAR_DIR no found"
+        mkdir -p "$WAYBAR_DIR" && echo "$C $WAYBAR_DIR" && touch "$WAYBAR_DIR/config.jsonc" && touch "$WAYBAR_DIR/style.css"
+        echo "$WAYBAR_DIR $C config.jsonc & style.css"
+    fi
+    if [ -d "$KVANTUM_DIR" ]; then
+        for file in "$KVANTUM_DIR"/*; do
+            if [ -f "$file" ] && [[ "file != *.bak "]]; then
+                mv "$file" "${file}_${CURRENT_DATE}.bak"
+                echo "$B $(basename "$file")"
+            fi
+        done
+        touch "$KVANTUM_DIR/kvantum.kvconfig" && echo "$C $KVANTUM_DIR/kvantum.kvconfig"
+        shopt -u dotglob
+        shopt -u nullglob
+    else
+        echo "$KVANTUM_DIR no found"
+        mkdir -p "$KVANTUM_DIR" && echo "$C $KVANTUM_DIR"
+        touch "$KVANTUM_DIR/kvantum.kvconfig" && echo "$C $KVANTUM_DIR/kvantum.kvconfig"
+    fi
+    if [ -d "$QT6CT_DIR" ]; then
+        for file in "$QT6CT_DIR"/*; do
+            if [ -f "$file" ] && [[ "file != *.bak "]]; then
+                mv "$file" "${file}_${CURRENT_DATE}.bak"
+                echo "$B $(basename "$file")"
+            fi
+        done
+        touch "$QT6CT_DIR/qt6ct.conf" && echo "$C $QT6CT/qt6ct.conf"
+        shopt -u dotglob
+        shopt -u nullglob
+    else
+        echo "$QT6CT no found"
+        mkdir -p "$QT6CT_DIR" && echo "$C $QT6CT_DIR"
+        touch "$QT6CT_DIR/qt6ct.conf" && echo "$C $QT6CT_DIR/qt6ct.conf"
+    fi
+    if [ -d "$ROFI_DIR" ]; then
+        for file in "$ROFI_DIR"/*; do
+            if [ -f "$file" ] && [[ "file != *.bak" ]]; then
+                mv "$file" "${file}_${CURRENT_DATE}.bak"
+                echo "$B $(basename "$file")"
+            fi
+        done
+        touch "$ROFI_DIR/config.rasi" && echo "$C $ROFI_DIR/config.rasi"
+        shopt -u dotglob
+        shopt -u nullglob
+    else
+        echo "$Q no found"
+        mkdir -p "$ROFI_DIR" && echo "$C $ROFI_DIR"
+        touch "$ROFI_DIR/config.rasi" && echo "$C $ROFI_DIR/config.rasi"
     fi
 fi
-### KITTY ###
-# VARIABLES
-DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/kitty"
-REPO_URL="https://github.com/ttys3/oh-my-kitty.git"
-# CREATE DESTINATION DIRECTORY
-mkdir -p "$DEST_DIR"
-# BACKUP CREATION
-if [ "$BACKUP" = "yes" ] && [ -d "$DEST_DIR" ] && [ "$(ls -A "$DEST_DIR")" ]; then
-    echo "Creating backup..."
-    BACKUP_DIR="$HOME/.config/kitty_backup_$(date +%Y%m%d_%H%M%S)"
-    mv "$DEST_DIR" "$BACKUP_DIR"
-    echo "Backup moved to: $BACKUP_DIR"
-fi
-# GIT CLONE
-git clone "$REPO_URL" "$DEST_DIR"
-rm -rf "$DEST_DIR/.git" "$DEST_DIR/.gitignore"
-echo "Files updated successfully!"
-# CHANGES CONFIGURATION
-sed -i 's/^shell_integration .*/shell_integration enabled no-cursor/g' "$DEST_DIR/kitty.conf"
 
-sed -i 's/background_opacity 1.0/background_opacity 0.98/g' "$DEST_DIR/kitty.conf"
-cat << 'EOF' >> "$DEST_DIR/kitty.conf"
+### KITTY ###
+# GIT CLONE
+git clone "$KITTY_URL" "$KITTY_DIR"
+echo "kitty cgf installed"
+rm -rf "$KITTY_DIR/.git" "$KITTY_DIR/.gitignore"
+echo "delete .git and .gitignore in $KITTY_DIR"
+# CHANGES CONFIGURATION
+sed -i 's/^shell_integration .*/shell_integration enabled no-cursor/g' "$KITTY_DIR/kitty.conf"
+sed -i 's/background_opacity 1.0/background_opacity 0.98/g' "$KITTY_DIR/kitty.conf"
+cat << 'EOF' >> "$KITTY_DIR/kitty.conf"
 cursor_shape block
 cursor_blink_interval 0.5
 cursor_stop_blinking_after 15.0
@@ -75,7 +170,6 @@ repaint_delay 8
 input_delay 1
 sync_to_monitor yes
 EOF
-
 sed -i \
   -e 's/^background .*/background #18222e/' \
   -e 's/^foreground .*/foreground #ffffff/' \
@@ -85,32 +179,16 @@ sed -i \
   -e 's/^color12 .*/color12 #373f90/' \
   -e 's/^color5 .*/color5 #c372ac/' \
   -e 's/^color13 .*/color13 #c372ac/' \
-  "$DEST_DIR/current-theme.conf"
-
-cat << 'EOF' >> "$DEST_DIR/current-theme.conf"
+  "$KITTY_DIR/current-theme.conf"
+cat << 'EOF' >> "$KITTY_DIR/current-theme.conf"
 selection_background #c372ac
 selection_foreground #373f90
 cursor #c372ac
 EOF
-    echo "Kitty color scheme installed. From https://raw.githubusercontent.com/ttys3/oh-my-kitty and used my theme."
+echo "Kitty color scheme installed"
 ### WAYBAR ###
-# VARIABLES and CREATION DIRECTORY
-DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
-mkdir -p "$DEST_DIR"
-# BACKUP
-if [ "$BACKUP" = "yes" ] && [ -f "$DEST_DIR/config.jsonc" ]; then
-    mv "$DEST_DIR/config.jsonc" "$DEST_DIR/config.jsonc.bak"
-    mv "$DEST_DIR/style.css" "$DEST_DIR/style.css.bak"
-    echo "Backup created: $DEST_DIR/style.css.bak and $DEST_DIR/config.jsonc.bak"
-else
-    echo "Existing config not found, skipping backup."
-fi
 # CREATION config.jsonc
-touch "$DEST_DIR/config.jsonc"
-cat <<EOF > "$DEST_DIR/config.jsonc"
-/*=======================================================================
---------------------------------SETTINGS---------------------------------
-=======================================================================*/
+cat << 'EOF' > "$DEST_DIR/config.jsonc"
 {
   "layer": "top",
   "position": "top",
@@ -133,26 +211,17 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "network",
     "group/power",
   ],
-  /*=======================================================================
-  ----------------------------------TRAY-----------------------------------
-  =======================================================================*/
   "tray": {
     "icon-size": 25,
     "spacing": 10,
     "show-passive-items": true,
     "reverse-direction": true,
   },
-  /*=======================================================================
-  ----------------------------------WINDOW---------------------------------
-  =======================================================================*/
   "niri/window": {
     "format": "{}",
     "max-length": 60,
     "separate-outputs": false,
   },
-  /*=======================================================================
-  --------------------------------DATE AND TIME----------------------------
-  =======================================================================*/
   "clock#1": {
     "type": "clock",
     "format": " {:%H:%M}",
@@ -178,9 +247,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "tooltip": true,
     "tooltip-format": "<tt><small>{calendar}</small></tt>",
   },
-/*=======================================================================
-------------------------------------SOUND--------------------------------
-=======================================================================*/
   "group/audio-drawer": {
     "type": "hbox",
     "orientation": "horizontal",
@@ -212,9 +278,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%",
     "scroll-step": 1,
   },
-/*===========================================================================
-------------------------------------BTOP-------------------------------------
-===========================================================================*/
 "group/btop-drawer": {
     "orientation": "horizontal",
     "drawer": {
@@ -236,9 +299,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "on-click": "kitty -e btop",
     "tooltip-format": "ЛКМ: btop++",
   },
-/*===========================================================================
----------------------------------BATTERY-------------------------------------
-===========================================================================*/
   "battery": {
     "states": {
       "good": 95,
@@ -261,10 +321,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
   "battery#bat2": {
     "bat": "BAT2",
   },
-
-/*===========================================================================
------------------------------------CPU---------------------------------------
-===========================================================================*/
   "cpu": {
       "interval": 2,
       "states": {
@@ -280,9 +336,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
       ],
       "tooltip-format": "<tt>Total Usage: {usage}%\nLoad Avg:    {load}\n\nAvg Freq:    {avg_frequency} GHz\nMax Freq:    {max_frequency} GHz\nMin Freq:    {min_frequency} GHz</tt>"
     },
-/*===========================================================================
------------------------------------MEMORY------------------------------------
-===========================================================================*/
   "memory": {
     "interval": 3,
     "states": {
@@ -293,10 +346,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "format-alt": " {used:.1f}G/{total:.1f}G",
     "tooltip-format": "    === RAM ===\nUsage:      {percentage}%\nUsed:       {used:.1f} GiB\nAvailable:  {avail:.1f} GiB\nTotal:      {total:.1f} GiB\n\n   === SWAP ===\nUsage:      {swapPercentage}%\nUsed:       {swapUsed:.1f} GiB\nAvailable:  {swapAvail:.1f} GiB\nTotal:      {swapTotal:.1f} GiB"
   },
-
-/*===========================================================================
------------------------------------TEMPERATURE----------------------------------
-===========================================================================*/
   "temperature": {
     "interval": 2,
     "critical-threshold": 80,
@@ -305,20 +354,12 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "format-icons": ["", "", "", "", ""],
     "tooltip-format": "Celsius:    {temperatureC}°C\nFahrenheit: {temperatureF}°F"
   },
-
-/*===========================================================================
------------------------------------BACKLIGHT---------------------------------
-===========================================================================*/
   "backlight": {
     "scroll-step": 5,
     "format": "{icon} {percent}%",
     "format-icons": ["󱩎", "󱩏", "󱩐", "󱩑", "󱩒", "󱩓", "󱩔", "󱩕", "󱩖", "󰛨"],
     "format-alt": "󰛨 Brightness: {percent}%"
   },
-
-/*===========================================================================
------------------------------------LANGUAGE----------------------------------
-===========================================================================*/
   "niri/language": {
       "format": "󰌌 {}",
       "format-en": "EN",
@@ -333,9 +374,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
       "format-it": "IT",
       "format-pl": "PL",
   },
-/*===========================================================================
------------------------------------NETWORK------------------------------------
-===========================================================================*/
   "network": {
     "interval": 2,
     "format-wifi": "{icon} {signalStrength}%",
@@ -355,9 +393,6 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     "on-click-middle": "exec wireshark",
     "on-click-right": "kitty -e zapret"
   },
-/*===========================================================================
------------------------------------POWER-------------------------------------
-===========================================================================*/
   "group/power": {
     "orientation": "horizontal",
     "drawer": {
@@ -367,45 +402,36 @@ cat <<EOF > "$DEST_DIR/config.jsonc"
     },
     "modules": ["custom/power", "custom/reboot", "custom/quit"],
   },
-
   "custom/power": {
     "format": "󰐥",
     "on-click": "poweroff",
     "tooltip": false,
   },
-
   "custom/reboot": {
     "format": " 󰦛 ",
     "on-click": "reboot",
     "tooltip": false,
   },
-
   "custom/quit": {
     "format": "  ",
     "on-click": "swaylock",
     "tooltip": false,
   },
-/*===========================================================================
------------------------------------BLUETOOTH---------------------------------
-===========================================================================*/
   "bluetooth": {
     "format": "󰂯",
     "format-disabled": "󰂲",
     "format-connected": "󰂱 {device_alias}",
     "format-connected-battery": "󰂱 {device_alias} 󰥉 {device_battery_percentage}%",
-
     "tooltip-format": "Контроллер: {controller_alias}\n{num_connections} подключено",
     "tooltip-format-connected": "Контроллер: {controller_alias}\n\nПодключено:\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "• {device_alias}\t{device_address}",
     "tooltip-format-enumerate-connected-battery": "• {device_alias}\t{device_address}\t🔋{device_battery_percentage}%",
-
     "on-click": "blueman-manager",
   },
 }
 EOF
-echo "config.jsonc created"
+echo "config.jsonc update"
 # CREATION style.css
-touch "$DEST_DIR/style.css"
 cat <<EOF > "$DEST_DIR/style.css"
 * {
     font-family:
@@ -497,32 +523,119 @@ tooltip label {
     border-radius: 0rem 0.5rem 0.5rem 0rem;
 }
 EOF
-echo "style.css created"
+echo "style.css updated"
 echo "Waybar configured"
 ### THEMES ###
-if ask_yes_no "Do you want to install Kvantum themes?"; then
-    bash <(curl -sSL https://raw.githubusercontent.com/renamon2/kvantum-rena/refs/heads/master/.install.sh)
-    echo "qt and gtk is configured"
-else
-    echo "Skipping Kvantum themes installation."
-fi
+mkdir -p "$TEMP_DIR"
+mkdir -p "$KVANTUM_DIR/rena-night"
+curl -L "$URL" -o "$TEMP_DIR/rena-night.tar.gz"
+tar -xzf "$TEMP_DIR/rena-night.tar.gz" -C "$KVANTUM_DIR/" && rm -rf "$TEMP_DIR"
+echo -e "Writing qt6ct.conf configuration..."
+cat << 'EOF' > "$QT6CT_DIR/qt6ct.conf"
+[Appearance]
+custom_palette=false
+icon_theme=Papirus-Dark
+standard_dialogs=xdgdesktopportal
+style=kvantum
+[Fonts]
+fixed="Fira Code Retina,12,-1,5,450,0,0,0,0,0,0,0,0,0,0,1,Regular"
+general="Fira Code Light,12,-1,5,300,0,0,0,0,0,0,0,0,0,0,1,Regular"
+[Interface]
+activate_item_on_single_click=1
+buttonbox_layout=1
+cursor_flash_time=1000
+dialog_buttons_have_icons=1
+double_click_interval=400
+gui_effects=General, AnimateMenu, AnimateCombo, AnimateTooltip, AnimateToolBox
+keyboard_scheme=1
+menus_have_icons=true
+show_shortcuts_in_context_menus=true
+stylesheets=/usr/share/qt6ct/qss/fusion-fixes.qss
+toolbutton_style=4
+underline_shortcut=1
+wheel_scroll_lines=3
+[Troubleshooting]
+force_raster_widgets=1
+ignored_applications=@Invalid()
+EOF
+
+echo -e "set gtk theme to pine-rose..."
+URL="https://github.com/rose-pine/gtk.git"
+TEMP1_DIR="/tmp/gtk-pine-rose"
+THEME_DIR="$XDG_DATA_HOME/themes"
+THEME_NAME="rose-pine-gtk"
+THEME_FULL_DIR="$THEME_DIR/$THEME_NAME"
+DEST_DIR_GTK3="$XDG_CONFIG_HOME/gtk-3.0"
+DEST_DIR_GTK4="$XDG_CONFIG_HOME/gtk-4.0"
+rm -rf "$TEMP1_DIR"
+mkdir -p "$THEME_FULL_DIR/gtk-3.0"
+mkdir -p "$THEME_FULL_DIR/gtk-4.0"
+mkdir -p "$DEST_DIR_GTK3"
+mkdir -p "$DEST_DIR_GTK4"
+
+git clone "$GTK_URL" "$TEMP_DIR"
+cp -r "$TEMP1_DIR/gtk3/rose-pine-gtk/"* "$THEME_FULL_DIR/gtk-3.0/"
+cp "$TEMP1_DIR/gtk4/rose-pine.css" "$THEME_FULL_DIR/gtk-4.0/gtk.css"
+cat << 'EOF' > "$THEME_FULL_DIR/index.theme"
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=rose-pine-gtk
+Encoding=UTF-8
+[X-GNOME-Metatheme]
+GtkTheme=rose-pine-gtk
+EOF
+
+            echo -e "Writing settings.ini configuration..."
+            touch "$DEST_DIR_GTK3/settings.ini"
+cat << 'EOF' > "$DEST_DIR_GTK3/settings.ini"
+[Settings]
+gtk-theme-name=rose-pine-gtk
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Fira Code Light 11
+gtk-cursor-theme-name=Kitty_Cursors
+gtk-cursor-theme-size=24
+gtk-toolbar-style=GTK_TOOLBAR_ICONS
+gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
+gtk-button-images=0
+gtk-menu-images=0
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=0
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintslight
+gtk-xft-rgba=rgb
+gtk-application-prefer-dark-theme=1
+EOF
+touch "$DEST_DIR_GTK4/settings.ini"
+cat << 'EOF' > "$DEST_DIR_GTK4/settings.ini"
+[Settings]
+gtk-theme-name=rose-pine-gtk
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Fira Code Light 11
+gtk-cursor-theme-name=Kitty_Cursors
+gtk-cursor-theme-size=24
+gtk-application-prefer-dark-theme=1
+EOF
+gsettings set org.gnome.desktop.interface gtk-theme 'rose-pine-gtk'
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+gsettings set org.gnome.desktop.interface cursor-theme 'Kitty_Cursors'
+gsettings set org.gnome.desktop.interface font-name 'Fira Code Light 11'
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 ### NOTIFICATION (SWAYNC) ###
 # VARIABLES
-DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
-REPO1_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/swaync/config.json"
-REPO2_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/swaync/style.css"
+SWAYNC_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
 # DIRECTORY CREATION
-mkdir -p "$DEST_DIR"
-if [ "$BACKUP" = "yes" ] && [ -f "$DEST_DIR/config.json" ]; then
-    mv "$DEST_DIR/config.json" "$DEST_DIR/config.json.bak"
-    mv "$DEST_DIR/style.css" "$DEST_DIR/style.css.bak"
-    echo "Backup created: $DEST_DIR/config.json.bak and $DEST_DIR/style.css.bak"
+mkdir -p "$SWAYNC_DIR"
+if [ "$BACKUP" = "yes" ] && [ -f "$SWAYNC_DIR/config.json" ]; then
+    mv "$SWAYNC_DIR/config.json" "$SWAYNC_DIR/config.json.bak"
+    mv "$SWAYNC_DIR/style.css" "$SWAYNC_DIR/style.css.bak"
+    echo "Backup created: $SWAYNC_DIR/config.json.bak and $SWAYNC_DIR/style.css.bak"
 else
     echo "Existing config not found, skipping backup."
 fi
 # FILE DOWNLOAD
-touch "$DEST_DIR/config.json"
-cat << 'EOF' > "$DEST_DIR/config.json"
+touch "$SWAYNC_DIR/config.json"
+cat << 'EOF' > "$SWAYNC_DIR/config.json"
 {
   "positionX": "right",
   "positionY": "top",
@@ -619,11 +732,8 @@ cat << 'EOF' > "$DEST_DIR/config.json"
   }
 }
 EOF
-touch "$DEST_DIR/style.css"
-cat << 'EOF' > "$DEST_DIR/style.css"
-/*=======================================================================
---------------------------------CONFIG-----------------------------------
-=======================================================================*/
+touch "$SWAYNC_DIR/style.css"
+cat << 'EOF' > "$SWAYNC_DIR/style.css"
 *{
     font-family: "Fira Code Light", monospace;
     font-size: 1rem;
@@ -648,9 +758,6 @@ cat << 'EOF' > "$DEST_DIR/style.css"
 .notification-progress {
     background-color: rgba(44, 34, 68, 0.2);
 }
-/*=======================================================================
-----------------------------BOUNCE ANIMATION-----------------------------
-=======================================================================*/
 @keyframes bounceIn {
     0% {
         opacity: 0;
@@ -674,24 +781,7 @@ cat << 'EOF' > "$DEST_DIR/style.css"
 EOF
 echo "Notification is configured"
 ### DMENU (ROFI) ###
-# VARIABLES
-DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/rofi"
-REPO_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/rofi/config.rasi"
-# CREATE DIRECTORY
-mkdir -p "$DEST_DIR"
-# BACKUP
-if [ "$BACKUP" = "yes" ] && [ -f "$DEST_DIR/config.rasi" ]; then
-    mv "$DEST_DIR/config.rasi" "$DEST_DIR/config.rasi.bak"
-    echo "Backup created: $DEST_DIR/config.rasi.bak"
-else
-    echo "Existing config not found, skipping backup."
-fi
-# DOWNLOAD ROFI CONFIG
-touch "$DEST_DIR/config.rasi"
-cat << 'EOF' > "$DEST_DIR/config.rasi"
-/*=======================================================================
---------------------------------CONFIG-----------------------------------
-=======================================================================*/
+cat << 'EOF' > "$ROFI_DIR/config.rasi"
 configuration {
     modes: [ drun, filebrowser, run ];
     show-icons: true;
@@ -702,9 +792,6 @@ configuration {
         sorting-method: "name";
     }
 }
-/*=======================================================================
---------------------------------COLORS-----------------------------------
-=======================================================================*/
 * {
     font: "DejaVu Sans Mono", "Symbols Nerd Font", "FiraCode Nerd Font", "JetBrainsMono Nerd Font mono 14";
     text: #373f90ff;
@@ -714,9 +801,6 @@ configuration {
     accent: #c372accc;
     rad: 8px;
 }
-/*=======================================================================
---------------------------------WINDOW-----------------------------------
-=======================================================================*/
 window {
     background-color: @base;
     border:           2px solid;
@@ -732,9 +816,6 @@ mainbox {
     children: [ inputbar, listview ];
     spacing: 15px;
 }
-/*=======================================================================
-------------------------------INPUTBAR-----------------------------------
-=======================================================================*/
 inputbar {
     background-color: @border-color-custom;
     border-radius:    @rad;
@@ -752,9 +833,6 @@ entry {
     placeholder-color: @subtle;
     text-color: @text;
 }
-/*=======================================================================
-------------------------------LISTVIEW-----------------------------------
-=======================================================================*/
 listview {
     layout:        vertical;
     lines:         8;
@@ -764,9 +842,6 @@ listview {
     scrollbar:     false;
     background-color: transparent;
 }
-/*=======================================================================
--------------------------------ELEMENT-----------------------------------
-=======================================================================*/
 element {
     orientation:      horizontal;
     padding:          10px 10px;
@@ -784,9 +859,6 @@ element selected.normal {
     background-color: @accent;
     text-color:       @text;
 }
-/*=======================================================================
-------------------------------ELEMENT ICON-------------------------------
-=======================================================================*/
 element-icon {
     size:             36px;
     background-color: transparent;
@@ -801,20 +873,13 @@ element-text {
 EOF
 echo "rofi is configured"
 ### SHELL (FISH) ###
-# VARIABLES
-URL="https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish"
-DIST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish"
-# CREATE DIRECTORY
-mkdir -p "$DIST_DIR"
-echo "make directory $DIST_DIR"
 # INSTALL FISHER
-if [ ! -a "$DIST_DIR/completions/fisher.fish" ]; then
+if [ ! -f "$DIST_DIR/completions/fisher.fish" ]; then
     echo "Installing fisher..."
-    fish -c "curl -sL $URL | source && fisher install jorgebucaran/fisher"
+    fish -c "curl -sL $FISH_URL | source && fisher install jorgebucaran/fisher"
     echo "Fisher installed successfully."
 fi
 # CONFIGURE FISH
-touch "$DIST_DIR/config.fish"
 cat << 'EOF' > "$DIST_DIR/config.fish"
 set -g fish_greeting "!YOU ARE IN fish-shell!"
 
@@ -832,25 +897,11 @@ abbr -a "msg" "niri msg"
 EOF
     echo "fish is configured"
 ### NIRI CONFIGARATION ###
-DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/niri"
-HELP_DIR="$DEST_DIR/help"
-CFG="$DEST_DIR/config.kdl"
-WALL_DIR="$DEST_DIR/wallpaper/awww/"
-URL1="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-0.3_overview.png"
-URL2="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-blurred.png"
-URL_HELP="https://raw.githubusercontent.com/renamon2/niri-rena-rice/main/help.tar.gz"
-mkdir -p "$DEST_DIR"
+mkdir -p "$NIRI_DIR"
 mkdir -p "$HELP_DIR"
 mkdir -p "$WALL_DIR"
-if [ "$BACKUP" = "yes" ] && [ -f "$CFG" ]; then
-    mv "$CFG" "$CFG.bak"
-    echo "niri config.kdl has been backed up to $CFG.bak."
-fi
-touch "$CFG"
-cat << 'EOF' > "$CFG"
-/*=======================================================================
---------------------------------environment------------------------------
-=======================================================================*/
+touch "$NIRI_CFG"
+cat << 'EOF' > "$NIRI_CFG"
 environment {
     XMODIFIERS "@im=none"
     FONTCONFIG_FONT_RENDER_STYLE "hintslight"
@@ -867,15 +918,8 @@ environment {
     _JAVA_AWT_WM_NONREPARENTING "1"
     GTK_THEME "rose-pine-gtk"
     XDG_SESSION_TYPE "wayland"
-    XDG_DATA_HOME "/home/user/.local/share"
-    XDG_STATE_HOME "/home/user/.local/state"
-    XDG_CONFIG_HOME "/home/user/.config"
-    XDG_DATA_DIRS "/home/user/.local/share:/usr/local/share:/usr/share:/var/lib/flatpak/exports/share:/home/user/.local/share/flatpak/exports/share"
     CLUTTER_BACKEND "wayland"
 }
-/*=======================================================================
------------------------------------input---------------------------------
-=======================================================================*/
 input {
     keyboard {
         xkb {
@@ -946,19 +990,13 @@ input {
     warp-mouse-to-focus
     focus-follows-mouse max-scroll-amount="0%"
     workspace-auto-back-and-forth
-    // mod-key "Super"
-    // mod-key-nested "Alt"
+    mod-key "Super"
+    mod-key-nested "Alt"
 }
-/*=======================================================================
----------------------------------cursor----------------------------------
-=======================================================================*/
 cursor {
     xcursor-theme "Kitty_Cursors"
     xcursor-size 24
 }
-/*=======================================================================
----------------------------------monitor---------------------------------
-=======================================================================*/
 /*output "eDP-1" {
     // off
     mode "preffered@hz"
@@ -967,19 +1005,10 @@ cursor {
     position x=0 y=0
     variable-refresh-rate
     focus-at-startup
-    // backdrop-color "#66003366"
-    // max-bpc 8
     hot-corners {
-        // off
         top-left
-        // top-right
-        // bottom-left
-        // bottom-right
     }
 }*/
-/*=======================================================================
-----------------------------------layout---------------------------------
-=======================================================================*/
 layout {
     gaps 14
     center-focused-column "on-overflow"
@@ -987,7 +1016,6 @@ layout {
         proportion 0.25
         proportion 0.5
         proportion 0.75
-        // fixed 1920
     }
     preset-window-heights {
         proportion 0.33333
@@ -1001,9 +1029,6 @@ layout {
         active-color "#2c2244"
         inactive-color "#18222e"
         urgent-color "#c372ac"
-        // active-gradient from="#80c8ff" to="#c7ff7f" angle=45
-        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
-        // urgent-gradient from="#800" to="#a33" angle=45
     }
     border {
         // off
@@ -1011,8 +1036,6 @@ layout {
         active-color "#2c2244"
         inactive-color "#18222e"
         urgent-color "#c372ac"
-        // active-gradient from="#ff3366" to="#ff66cc" angle=45 relative-to="workspace-view" in="oklch longer hue"
-        // inactive-gradient from="#ff99cc" to="#ff99ff" angle=45 relative-to="workspace-view"
     }
     shadow {
         on
@@ -1037,9 +1060,6 @@ layout {
         active-color "#2c2244"
         inactive-color "#18222e"
         urgent-color "#c372ac"
-        // active-gradient from="#80c8ff" to="#bbddff" angle=45
-        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
-        // urgent-gradient from="#800" to="#a33" angle=45
     }
     insert-hint {
         // off
@@ -1072,26 +1092,17 @@ overview {
         color "#70437e33"
     }
 }
-/*=======================================================================
--------------------------------auto-startup------------------------------
-=======================================================================*/
-    spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri XDG_RUNTIME_DIR"
-    // spawn-sh-at-startup "dbus-update-activation-environment --all"
-    // spawn-sh-at-startup "dbus-send --session --reconnect --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ReloadConfig"
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
     spawn-at-startup "waybar"
     spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png"
     spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur"
     spawn-at-startup "swaync"
-/*=======================================================================
-----------------------------------another--------------------------------
-=======================================================================*/
 hotkey-overlay {
     // skip-at-startup
 }
 prefer-no-csd
-screenshot-path "~/Pictures/Screenshots from %Y-%m-%d %H-%M-%S.png"
+screenshot-path "~/Pictures/Screenshots from %Y-%m-%d_%H-%M-%S.png"
 xwayland-satellite {
     // off
     path "xwayland-satellite"
@@ -1102,9 +1113,6 @@ clipboard {
 config-notification {
     // disable-failed
 }
-/*=======================================================================
----------------------------------animations------------------------------
-=======================================================================*/
 animations {
     slowdown 3.0
     horizontal-view-movement {
@@ -1129,9 +1137,6 @@ animations {
         spring stiffness=500 damping-ratio=0.65 epsilon=0.0001
     }
 }
-/*=======================================================================
------------------------------Window Rules--------------------------------
-=======================================================================*/
 window-rule {
     opacity 0.95}
 window-rule {
@@ -1210,9 +1215,6 @@ window-rule {
         inactive-color "#18222e"
     }
 }
-/*=======================================================================
------------------------------layer rules---------------------------------
-=======================================================================*/
 layer-rule {
     match namespace="^waybar$"
     match namespace="^rofi$"
@@ -1227,9 +1229,6 @@ layer-rule {
     match namespace="^awww-daemonblur$"
     place-within-backdrop true
 }
-/*=======================================================================
-----------------------------Hotkey Bindkeys------------------------------
-=======================================================================*/
 binds {
     Mod+F1 { spawn-sh "firefox --new-window /home/$USER/.config/niri/help/help.html"; }
     Mod+T { spawn "kitty"; }
@@ -1267,7 +1266,6 @@ binds {
     Mod+Alt+V  { switch-focus-between-floating-and-tiling; }
     Mod+W  { toggle-column-tabbed-display; }
     Mod+Print  { screenshot-screen; }
-    Mod+Escape  { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+E  { quit; }
     Mod+Shift+P  { power-off-monitors; }
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
@@ -1285,42 +1283,31 @@ binds {
     Mod+Alt+R { reset-window-height; }
     Mod+Shift+F { fullscreen-window; }
     Mod+Alt+F { expand-column-to-available-width; }
-    Mod+TouchpadScrollDown { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+"; }
-    Mod+TouchpadScrollUp   { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
     Mod+Shift+Left  { focus-monitor-left; }
     Mod+Shift+Down  { focus-monitor-down; }
     Mod+Shift+Up    { focus-monitor-up; }
     Mod+Shift+Right { focus-monitor-right; }
 }
-EOF
-    echo "$CFG has been installed."
-sed "s/user/$USER/g" "$CFG" > "$CFG.tmp" && mv "$CFG.tmp" "$CFG"
-echo "$CFG user update."
+EOF && echo "$NIRI_CFG is updated."
+sed "s/user/$USER/g" "$NIRI_CFG" > "$CFG.tmp" && mv "$NIRI_CFG.tmp" "$NIRI_CFG" && echo "$NIRI_CFG user update."
 
-curl -sSL "$URL_HELP" -o "$HELP_DIR/help.tar.gz"
-echo "niri help has been installed."
-tar -xzf "$HELP_DIR/help.tar.gz" -C "$HELP_DIR"
-echo "niri help has been extracted."
-rm -f "$HELP_DIR/help.tar.gz"
-echo "archive deleted"
+curl -sSL "$HELP_URL" -o "$HELP_DIR/help.tar.gz" && echo "niri help has been installed."
+tar -xzf "$HELP_DIR/help.tar.gz" -C "$HELP_DIR" && echo "niri help has been extracted."
+rm -f "$HELP_DIR/help.tar.gz" && echo "archive deleted"
 
-curl -sSL "$URL1" -o "$WALL_DIR/toki_in_space-0.3_overview.png"
-echo "wallpaper for overview installed"
-curl -sSL "$URL2" -o "$WALL_DIR/toki_in_space-blurred.png"
-echo "niri wallpaper have been installed."
+curl -sSL "$WALL1_URL" -o "$WALL_DIR/toki_in_space-0.3_overview.png" && echo "wallpaper for overview installed"
+curl -sSL "$WALL2_URL" -o "$WALL_DIR/toki_in_space-blurred.png" && echo "niri wallpaper have been installed."
 echo "niri is configured"
 
-DEST_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xdg-desktop-portal"
-mkdir -p "$DEST_DIR"
-touch "$DEST_DIR/portals.conf"
-echo "$DEST_DIR created"
-echo "$DEST_DIR/portals.conf created"
-cat << 'EOF' > "$DEST_DIR/portals.conf"
+mkdir -p "$XDG_DESKTOP_DIR"
+touch "$XDG_DESKTOP_DIR/portals.conf"
+echo "$XDG_DESKTOP_DIR created"
+echo "$XDG_DESKTOP_DIR/portals.conf created"
+cat << 'EOF' > "$XDG_DESKTOP_DIR/portals.conf"
 [preferred]
 default=gtk
 org.freedesktop.impl.portal.ScreenCast=gnome
 org.freedesktop.impl.portal.Screenshot=gnome
 EOF
 echo "xdg-desktop-portal configured"
-
 exit 0
