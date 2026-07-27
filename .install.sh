@@ -3,26 +3,26 @@
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 KITTY_DIR="$XDG_CONFIG_HOME/kitty"
-KITTY_URL="https://github.com/ttys3/oh-my-kitty.git"
+KITTY_URL='https://github.com/ttys3/oh-my-kitty.git'
 WAYBAR_DIR="$XDG_CONFIG_HOME/waybar"
-KVANTUM_DIR="$XDG_CONFIG_HOME/Kvantum"
-THEME_URL="https://github.com/renamon2/kvantum-rena/raw/refs/heads/master/rena-night.tar.gz"
-TEMP_DIR="/tmp/rena-night"
+KVANTUM_DIR="$XDG_CONFIG_HOME/kvantum"
+THEME_URL='https://github.com/renamon2/kvantum-rena/raw/refs/heads/master/rena-night.tar.gz'
+TEMP_DIR='/tmp/rena-night'
 QT6CT_DIR="$XDG_CONFIG_HOME/qt6ct"
-GTK_URL="https://github.com/rose-pine/gtk.git"
-TEMP1_DIR="/tmp/gtk-pine-rose"
+GTK_URL='https://github.com/rose-pine/gtk.git'
+TEMP1_DIR='/tmp/gtk-pine-rose'
 THEME_DIR="$XDG_DATA_HOME/themes"
-THEME_NAME="rose-pine-gtk"
+THEME_NAME='rose-pine-gtk'
 THEME_FULL_DIR="$THEME_DIR/$THEME_NAME"
 DEST_DIR_GTK3="$XDG_CONFIG_HOME/gtk-3.0"
 DEST_DIR_GTK4="$XDG_CONFIG_HOME/gtk-4.0"
-ROFI_DIR=$XDG_CONFIG_HOME/rofi
-FISH_URL="https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish"
+ROFI_DIR="$XDG_CONFIG_HOME/rofi"
+FISH_URL='https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish'
 FISH_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish"
 NIRI_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/niri"
-HELP_DIR="$DEST_DIR/help"
-NIRI_CFG="$DEST_DIR/config.kdl"
-WALL_DIR="$DEST_DIR/wallpaper/awww/"
+HELP_DIR="$NIRI_DIR/help"
+NIRI_CFG="$NIRI_DIR/config.kdl"
+WALL_DIR="$NIRI_DIR/wallpaper/awww/"
 WALL1_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-0.3_overview.png"
 WALL2_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/refs/heads/main/assets/toki_in_space-blurred.png"
 HELP_URL="https://raw.githubusercontent.com/renamon2/niri-rena-rice/main/help.tar.gz"
@@ -30,11 +30,10 @@ XDG_DESKTOP_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/xdg-desktop-portal"
 B='Backup create:'
 C='Create:'
 CURRENT_DATE=$(date +%Y-%m-%d_%H-%M-%S)
-NOT_PACKAGES='nerd-fonts-symbols-ttf font-firacode papirus-icon-theme'
 REQUIRED_APPS=(
-    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq" "wireshark-qt" "firefox" "octoxbps"
+    "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq" "wireshark-qt" "firefox" "octoxbps" "font-firacode"
     "zed" "gwenview" "ark" "gucharmap" "xdg-desktop-portal-gtk" "git" "NetworkManager" "pavucontrol" "kitty" "Waybar"
-    "fish-shell" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
+    "fish-shell" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look" "nerd-fonts-symbols-ttf" "papirus-icon-theme"
 )
 MISSING_APPS=()
 ### FUNCTIONS ###
@@ -45,7 +44,7 @@ ask_yes_no() {
         [YyДд]* | [Yy][Ee][Ss] | [Дд][Аа] | "yep" | "yeah" | "sure" )
             return 0
             ;;
-        [NnНн]* | [Nn][Oo] | [Нн][Ее][Тт] | "nope" | "nay" | "" ) # Enter теперь тоже NO
+        [NnНн]* | [Nn][Oo] | [Нн][Ее][Тт] | "nope" | "nay" | "" )
             return 1
             ;;
         * )
@@ -85,11 +84,11 @@ if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
     echo "Found missing packages: ${MISSING_APPS[*]}"
     if grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null || grep -q "vostok" /etc/os-release 2>/dev/null; then
         echo "vostok linux repo found"
-        sudo xbps-install -Sy "${MISSING_APPS[@]}" "NOT_PACKAGES"
+        sudo xbps-install -Sy "${MISSING_APPS[@]}"
         echo "installed missing apps: ${MISSING_APPS[@]}"
     elif ! grep -rq "vostoklinux.org" /etc/xbps.d/ 2>/dev/null; then
         echo "vostok linux repo not found. Adding repository..."
-        echo "repository=https://vostoklinux.org" | sudo tee /etc/xbps.d/vostok.conf > /null
+        echo "repository=https://vostoklinux.org" | sudo tee /etc/xbps.d/vostok.conf > /dev/null
         sudo xbps-install -Suy "${MISSING_APPS[@]}"
         echo "installed missing apps: ${MISSING_APPS[@]}"
     else
@@ -141,7 +140,7 @@ EOF
 echo "Kitty color scheme installed"
 ### WAYBAR ###
 # CREATION config.jsonc
-cat << 'EOF' > "$DEST_DIR/config.jsonc"
+cat << 'EOF' > "$WAYBAR/config.jsonc"
 {
   "layer": "top",
   "position": "top",
@@ -385,7 +384,7 @@ cat << 'EOF' > "$DEST_DIR/config.jsonc"
 EOF
 echo "config.jsonc update"
 # CREATION style.css
-cat <<EOF > "$DEST_DIR/style.css"
+cat <<EOF > "$WAYBAR_DIR/style.css"
 * {
     font-family:
         "DejaVu Sans Mono", "Symbols Nerd Font", "FiraCode Nerd Font",
@@ -481,7 +480,7 @@ echo "Waybar configured"
 ### THEMES ###
 mkdir -p "$TEMP_DIR"
 mkdir -p "$KVANTUM_DIR/rena-night"
-curl -L "$URL" -o "$TEMP_DIR/rena-night.tar.gz"
+curl -L "$THEME_URL" -o "$TEMP_DIR/rena-night.tar.gz"
 tar -xzf "$TEMP_DIR/rena-night.tar.gz" -C "$KVANTUM_DIR/" && rm -rf "$TEMP_DIR"
 echo -e "Writing qt6ct.conf configuration..."
 cat << 'EOF' > "$QT6CT_DIR/qt6ct.conf"
@@ -526,7 +525,7 @@ mkdir -p "$THEME_FULL_DIR/gtk-4.0"
 mkdir -p "$DEST_DIR_GTK3"
 mkdir -p "$DEST_DIR_GTK4"
 
-git clone "$GTK_URL" "$TEMP_DIR"
+git clone "$GTK_URL" "$TEMP1_DIR"
 cp -r "$TEMP1_DIR/gtk3/rose-pine-gtk/"* "$THEME_FULL_DIR/gtk-3.0/"
 cp "$TEMP1_DIR/gtk4/rose-pine.css" "$THEME_FULL_DIR/gtk-4.0/gtk.css"
 cat << 'EOF' > "$THEME_FULL_DIR/index.theme"
@@ -579,13 +578,6 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 SWAYNC_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
 # DIRECTORY CREATION
 mkdir -p "$SWAYNC_DIR"
-if [ "$BACKUP" = "yes" ] && [ -f "$SWAYNC_DIR/config.json" ]; then
-    mv "$SWAYNC_DIR/config.json" "$SWAYNC_DIR/config.json.bak"
-    mv "$SWAYNC_DIR/style.css" "$SWAYNC_DIR/style.css.bak"
-    echo "Backup created: $SWAYNC_DIR/config.json.bak and $SWAYNC_DIR/style.css.bak"
-else
-    echo "Existing config not found, skipping backup."
-fi
 # FILE DOWNLOAD
 touch "$SWAYNC_DIR/config.json"
 cat << 'EOF' > "$SWAYNC_DIR/config.json"
@@ -827,13 +819,13 @@ EOF
 echo "rofi is configured"
 ### SHELL (FISH) ###
 # INSTALL FISHER
-if [ ! -f "$DIST_DIR/completions/fisher.fish" ]; then
+if [ ! -f "$FISH_DIR/completions/fisher.fish" ]; then
     echo "Installing fisher..."
     fish -c "curl -sL $FISH_URL | source && fisher install jorgebucaran/fisher"
     echo "Fisher installed successfully."
 fi
 # CONFIGURE FISH
-cat << 'EOF' > "$DIST_DIR/config.fish"
+cat << 'EOF' > "$FISH_DIR/config.fish"
 set -g fish_greeting "!YOU ARE IN fish-shell!"
 
 set -gx EDITOR zed
@@ -1048,8 +1040,8 @@ overview {
     spawn-at-startup "pipewire"
     spawn-at-startup "wireplumber"
     spawn-at-startup "waybar"
-    spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png"
-    spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/arina/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur"
+    spawn-sh-at-startup "awww-daemon & sleep 0.3; awww img /home/user/.config/niri/wallpaper/awww/toki_in_space-0.3_overview.png"
+    spawn-sh-at-startup "awww-daemon -n -blur & sleep 0.3; awww img /home/user/.config/niri/wallpaper/awww/toki_in_space-blurred.png --namespace blur"
     spawn-at-startup "swaync"
 hotkey-overlay {
     // skip-at-startup
@@ -1242,7 +1234,7 @@ binds {
     Mod+Shift+Right { focus-monitor-right; }
 }
 EOF && echo "$NIRI_CFG is updated."
-sed "s/user/$USER/g" "$NIRI_CFG" > "$CFG.tmp" && mv "$NIRI_CFG.tmp" "$NIRI_CFG" && echo "$NIRI_CFG user update."
+sed "s/user/$USER/g" "$NIRI_CFG" > "$NIRI_CFG.tmp" && mv "$NIRI_CFG.tmp" "$NIRI_CFG" && echo "$NIRI_CFG user update."
 
 curl -sSL "$HELP_URL" -o "$HELP_DIR/help.tar.gz" && echo "niri help has been installed."
 tar -xzf "$HELP_DIR/help.tar.gz" -C "$HELP_DIR" && echo "niri help has been extracted."
