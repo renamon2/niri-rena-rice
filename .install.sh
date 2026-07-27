@@ -33,7 +33,7 @@ CURRENT_DATE=$(date +%Y-%m-%d_%H-%M-%S)
 NOT_PACKAGES='nerd-fonts-symbols-ttf font-firacode papirus-icon-theme'
 REQUIRED_APPS=(
     "niri" "btop" "xdg-desktop-portal-gnome" "awww" "dolphin" "jq" "wireshark-qt" "firefox" "octoxbps"
-    "zed" "gwenview" "ark""gucharmap" "xdg-desktop-portal-gtk" "git" "NetworkManager" "pavucontrol" "kitty" "Waybar"
+    "zed" "gwenview" "ark" "gucharmap" "xdg-desktop-portal-gtk" "git" "NetworkManager" "pavucontrol" "kitty" "Waybar"
     "fish" "SwayNotificationCenter" "rofi" "kvantum" "qt6ct" "nwg-look"
 )
 MISSING_APPS=()
@@ -78,7 +78,7 @@ process_backup() {
     done
 }
 for app in "${REQUIRED_APPS[@]}"; do
-    xbps-query -l "$app" >/dev/null 2>&1 || MISSING_APPS+=("$app")
+    xbps-query -l "$app" | grep -E "^ii $app-" >/dev/null 2>&1 || MISSING_APPS+=("$app")
 done
 ### INSTALL PACKAGES ###
 if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
