@@ -78,7 +78,7 @@ process_backup() {
     done
 }
 for app in "${REQUIRED_APPS[@]}"; do
-    xbps-query -l "$app" | grep -E "^ii $app-" >/dev/null 2>&1 || MISSING_APPS+=("$app")
+    xbps-query -l | grep -E "^ii $app-" >/dev/null 2>&1 || MISSING_APPS+=("$app")
 done
 ### INSTALL PACKAGES ###
 if command -v xbps-install && [ ${#MISSING_APPS[@]} -gt 0 ]; then
